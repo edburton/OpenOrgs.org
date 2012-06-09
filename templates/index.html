@@ -1,0 +1,24 @@
+{% extends "_base.html" %}
+{% block bodycontent %}
+	{% for greeting in greetings %}
+		{% if greeting.author %}
+			{{ greeting.author.nickname }} wrote:
+		{% else %}
+			An anonymous person wrote:
+		{% endif %}
+		<blockquote>
+			{{ greeting.content|escape }}
+		</blockquote>
+	{% endfor %}
+
+<form action="/sign" method="post">
+	<div>
+		<textarea name="content" rows="3" cols="60"></textarea>
+	</div>
+	<div>
+		<input type="submit" value="Sign Guestbook">
+	</div>
+</form>
+
+<a href="{{ url }}">{{ url_linktext }}</a>
+{% endblock %}
