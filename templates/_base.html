@@ -1,13 +1,16 @@
 <html>
 	<head>
-		<title>OpenOrgs.org</title>
+		<title>{{site_name}}</title>
 		<link type="text/css" rel="stylesheet" href="../static/main.css" />
 		<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 	</head>
 	<body>
 	<body>
+		<div id="login">
+			<a href="{{ url }}">{{ url_linktext }}</a>
+		</div>
 		<div id="header">
-			<h1><a href="index.html">{{site_name}}
+			<h1><a href="/">{{site_name}}
 			<div id="slogan">
 				{{site_slogan}}
 			</div></a></h1>
@@ -17,6 +20,7 @@
 			{% endblock %}
 		</div>
 		<div id="footer">
+			{{site_name}} development: <a href="http://github.com/edburton/OpenOrgs.org">github.com/edburton/OpenOrgs.org</a>
 		</div>
 	</body>
 </html>

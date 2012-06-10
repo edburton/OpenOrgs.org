@@ -6,17 +6,16 @@ body {
 }
 
 h1, h2, h3, h4, h5 {
- 	text-decoration: none;
+	text-decoration: none;
 	font-weight: normal;
 }
 
-
 h1 {
-	white-space:nowrap;
+	white-space: nowrap;
 	border: 0;
 	margin: 0;
 	padding: 0;
-	height: 110px;
+	height: 100px;
 	font-size: 40px;
 	line-height: 0.9em;
 	background: url(/static/OOO100wide.png) no-repeat 0 0;
@@ -35,6 +34,68 @@ h1 a {
 	text-indent: 115px;
 }
 
-#footer {
-	font-size: 0.66em;
+#login {
+	float: right;
 }
+
+#navigation {
+	padding: 0px 0px 0px 0px;
+}
+
+#navigation ul {
+	margin-left: 0;
+	padding-left: 0;
+	white-space: nowrap;
+}
+
+#navigation li {
+	display: inline;
+	list-style-type: none;
+}
+
+#navigation a {
+	margin-right: 25px;
+	font-size: 30px;
+	border-width: 5px;
+	border-color: #363639;
+}
+
+#navigation a:link, #navigation a:visited {
+	color: #363639;
+	text-decoration: none;
+}
+
+#sub_navigation {
+	padding: 0px 0px 25px 0px;
+}
+
+#sub_navigation a {
+	text-decoration: none;
+	color: #363639;
+	font-size: 20px;
+	border-width: 5px;
+	border-color: #363639;
+}
+
+#sub_navigation a:hover {
+	border-bottom-style: solid;
+}
+
+a.here {
+	border-bottom-style: solid;
+}
+
+a.there:hover {
+	border-bottom-style: solid;
+}
+
+#footer {
+	padding-top: 0px;
+	display: block;
+	border-top-style: dotted;
+	border-width: 1px;
+	border-color: #363639;
+	font-size: 0.66em;
+	text-align: right;
+}
+
