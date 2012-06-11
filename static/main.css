@@ -49,13 +49,13 @@ h1 a {
 	white-space: nowrap;
 }
 
-#navigation li {
+#navigation li, #sub_navigation li {
 	display: inline;
 	list-style-type: none;
 }
 
-#navigation a {
-	margin-right: 25px;
+#navigation a, #sub_navigation a {
+	margin-right: 15px;
 	font-size: 30px;
 	border-width: 5px;
 	border-color: #363639;

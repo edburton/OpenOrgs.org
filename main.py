@@ -65,6 +65,17 @@ class ManageEventsPage(webapp2.RequestHandler):
         temp = os.path.join(os.path.dirname(__file__), 'templates/manageevents.html')
         outstr = template.render(temp, template_values)
         self.response.out.write(outstr)
+
+class AddEventPage(webapp2.RequestHandler):
+    def get(self):
+        template_values = { }
+        
+        template_values = dict(template_values.items() + base_dictionary(self).items())
+
+        temp = os.path.join(os.path.dirname(__file__), 'templates/addevent.html')
+        outstr = template.render(temp, template_values)
+        self.response.out.write(outstr)
+
         
 class ContactsPage(webapp2.RequestHandler):
     def get(self):
@@ -105,6 +116,7 @@ class Guestbook(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication([('/', MainPage),
                                ('/events/manage', ManageEventsPage),
+                               ('/events/add', AddEventPage),
                                ('/contacts', ContactsPage),
                                ('/contacts/add', AddContactsPage)],
                               debug=True)
