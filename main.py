@@ -15,6 +15,22 @@ site_slogan = 'for getting together whenever forever'
 jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
+################MODEL##########################
+
+class User(db.Model):
+    email = db.EmailProperty()
+    contacts = db.ListProperty(db.Key)
+    events = db.ListProperty(db.Key)
+    
+class Event(db.Model):
+    title = str()
+    description = db.Text()
+
+class EventInstance(db.Model):
+    date = datetime.date
+    
+################CONTROLLER##########################    
+
 class Greeting(db.Model):
   """Models an individual Guestbook entry with an author, content, and date."""
   author = db.UserProperty()
@@ -35,7 +51,6 @@ def base_dictionary(self):
         url = users.create_login_url(self.request.uri)
         url_linktext = 'Login'
     return {
-            'url':url,
             'url_linktext':url_linktext,
             'site_name': site_name,
             'site_slogan': site_slogan
@@ -53,6 +68,16 @@ class MainPage(webapp2.RequestHandler):
         template_values = dict(template_values.items() + base_dictionary(self).items())
 
         temp = os.path.join(os.path.dirname(__file__), 'templates/index.html')
+        outstr = template.render(temp, template_values)
+        self.response.out.write(outstr)
+
+class LoginPage(webapp2.RequestHandler):
+    def get(self):
+        template_values = { }
+        
+        template_values = dict(template_values.items() + base_dictionary(self).items())
+
+        temp = os.path.join(os.path.dirname(__file__), 'templates/login.html')
         outstr = template.render(temp, template_values)
         self.response.out.write(outstr)
 
@@ -115,8 +140,10 @@ class Guestbook(webapp2.RequestHandler):
 
 
 app = webapp2.WSGIApplication([('/', MainPage),
+                               ('/login', LoginPage),
                                ('/events/manage', ManageEventsPage),
                                ('/events/add', AddEventPage),
                                ('/contacts', ContactsPage),
                                ('/contacts/add', AddContactsPage)],
                               debug=True)
+

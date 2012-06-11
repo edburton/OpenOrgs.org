@@ -29,10 +29,17 @@ h1 a {
 	text-indent: 110px;
 }
 
+h2 {
+	border: 0;
+	margin: 0;
+	padding-bottom: 25px;
+}
+
 #slogan {
 	display: block;
 	font-size: 0.37em;
 	text-indent: 115px;
+	padding-bottom: 25px;
 }
 
 #login {
@@ -40,7 +47,7 @@ h1 a {
 }
 
 #navigation {
-	padding: 0px 0px 0px 0px;
+	padding: 0px 0px 10px 0px;
 }
 
 #navigation ul, #sub_navigation ul {
@@ -53,7 +60,7 @@ h1 a {
 	list-style-type: none;
 	display: inline-block;
 	white-space: nowrap;
-	padding-bottom: 10px;
+	padding: 0px;
 }
 
 #navigation a, #sub_navigation a {
@@ -93,6 +100,7 @@ a.there:hover {
 }
 
 #content {
+	margin-top: 25px;
 	padding-top: 25px;
 	border-top-style: dotted;
 	border-width: 1px;
@@ -101,7 +109,7 @@ a.there:hover {
 
 #footer {
 	margin-top: 25px;
-	padding-top: 0px;
+	padding-top: 5px;
 	display: block;
 	border-top-style: dotted;
 	border-width: 1px;
