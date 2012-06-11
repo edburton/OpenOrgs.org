@@ -43,15 +43,17 @@ h1 a {
 	padding: 0px 0px 0px 0px;
 }
 
-#navigation ul {
+#navigation ul, #sub_navigation ul {
 	margin-left: 0;
-	padding-left: 0;
-	white-space: nowrap;
+	padding: 0px 0px 0px 0px;
 }
 
 #navigation li, #sub_navigation li {
 	display: inline;
 	list-style-type: none;
+	display: inline-block;
+	white-space: nowrap;
+	padding-bottom: 10px;
 }
 
 #navigation a, #sub_navigation a {
@@ -67,7 +69,7 @@ h1 a {
 }
 
 #sub_navigation {
-	padding: 0px 0px 25px 0px;
+	padding: 0px 0px 0px 0px;
 }
 
 #sub_navigation a {
@@ -88,6 +90,13 @@ a.here {
 
 a.there:hover {
 	border-bottom-style: solid;
+}
+
+#content {
+	padding-top: 25px;
+	border-top-style: dotted;
+	border-width: 1px;
+	border-color: #363639;
 }
 
 #footer {
