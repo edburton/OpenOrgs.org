@@ -22,9 +22,6 @@
 {% for event in events %}
 <div class="box" >
 	<div id="event">
-		<div id="credits">
-			<span>{{ user_email }}</span>
-		</div>
 		<h4 class="title">{{ event.title }}</h4>
 		<p id="description">
 			{% autoescape off %}{{ event.description|linebreaksbr }}{% endautoescape %}
