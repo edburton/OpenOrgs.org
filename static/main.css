@@ -2,7 +2,8 @@ body {
 	font-family: 'Open Sans', sans-serif;
 	background-color: #FFFFFF;
 	color: #363639;
-	padding: 50px 50px 50px 50px
+	padding: 50px 50px 50px 50px;
+	margin: 0px;
 }
 
 h1, h2, h3, h4, h5 {
@@ -35,7 +36,7 @@ h2 {
 	padding-bottom: 25px;
 }
 
-#title {
+h4.title {
 	display: inline-block;
 	font-size: 20px;
 	padding: 0;
@@ -116,33 +117,24 @@ a.there:hover {
 }
 
 #content {
+	display: block;
 	margin-top: 40px;
 	margin-bottom: 10px;
 }
 
-#footer {
-	display: block;
-	font-size: 10px;
-	text-align: right;
-}
-
-#box label {
+label {
 	display: block;
 	font-size: 15px;
 }
 
-#box .field {
+div.box .field {
 	width: 100%;
-	margin-bottom: 25px;
+	margin-bottom: 10px;
 	font-size: 15px;
 }
 
-#box .submit {
-	font-size: 1.2em;
-}
-
-#box {
-	padding: 25px;
+div.box {
+	padding: 10px;
 	margin-bottom: 10px;
 	border-style: dotted;
 	border-left-width: 1px;
@@ -151,4 +143,30 @@ a.there:hover {
 	border-top-width: 1px;
 	border-color: #363639;
 	box-shadow: -5px 0px 10px #c1b6b3;
+}
+
+#credits {
+	text-align: right;
+	margin: 5px 0px 0px 0px;
+}
+
+#credits span {
+	font-size: 15px;
+	border-top: solid;
+	border-width: 3px;
+	border-color: #c1b6b3;
+}
+
+#functions {
+	display: block;
+	float: right;
+	padding: 0px;
+	margin: 0px;
+}
+
+#footer {
+	padding-top: 20px;
+	display: block;
+	font-size: 10px;
+	text-align: right;
 }
