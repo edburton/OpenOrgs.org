@@ -7,7 +7,11 @@
 	<body>
 	<body>
 		<div id="login">
-			<a href="/login">{{ url_linktext }}</a>
+			{% if user_email %}
+			{{user_email}}
+			<br>
+			{% endif %}
+			<a href="{{ log_in_or_out_url }}">{{ log_in_or_out_text }}</a>
 		</div>
 		<div id="header">
 			<h1><a href="/">{{site_name}}
@@ -15,9 +19,18 @@
 				{{site_slogan}}
 			</div></a></h1>
 		</div>
-		<div id="bodycontent">
-			{% block bodycontent %} Replace this
-			{% endblock %}
+		{% block navigation %}{% endblock %}
+		<div id="content" >
+			{% if user_email %}
+			{% block content %}{% endblock %}
+			{% else %}
+			<div id=box>
+				{{site_name}} is for organizing intermittant private Events amongst a list of e-mail Contacts
+				<br>
+				<br>
+				Please <a href="{{ log_in_or_out_url }}">{{ log_in_or_out_text }}</a> to start using {{site_name}}
+			</div>
+			{% endif %}
 		</div>
 		<div id="footer">
 			{{site_name}} development: <a href="http://github.com/edburton/OpenOrgs.org">github.com/edburton/OpenOrgs.org</a>

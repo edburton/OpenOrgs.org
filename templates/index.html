@@ -1,5 +1,5 @@
 {% extends "_base.html" %}
-{% block bodycontent %}
+{% block navigation %}
 <ul id="navigation">
 	<li>
 		<a class="here" href="/">Events</a>
@@ -16,7 +16,9 @@
 		<a class="there" href="/events/manage">+ Manage Events</a>
 	</li>
 </ul>
-<div id="content">
-	Chronological list of all Event dates goes here
+{% endblock %}
+{% block content %}
+<div id=box>
+	List of event dates goes here
 </div>
 {% endblock %}

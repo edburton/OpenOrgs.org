@@ -1,0 +1,11 @@
+{% block editevent %}
+<div id="box" >
+	<form method="post" >
+		<label for="title">Event Title</label>
+		<input class="field" type="text" name="title" required="required" />
+		<label for="description">Description</label>
+		<textarea class="field" name="description" required="required"></textarea>
+		<input class="submit" type="submit" value="Add this Event">
+	</form>
+</div>
+{% endblock %}

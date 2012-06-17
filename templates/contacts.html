@@ -1,5 +1,5 @@
 {% extends "_base.html" %}
-{% block bodycontent %}
+{% block navigation %}
 <ul id="navigation">
 	<li>
 		<a class="there" href="/">Events</a>
@@ -13,7 +13,9 @@
 		<a class="there" href="/contacts/add">+ Add Contacts</a>
 	</li>
 </ul>
-<div id="content">
+{% endblock %}
+{% block content %}
+<div id=box>
 	List of contacts goes here
 </div>
 {% endblock %}

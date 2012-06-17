@@ -35,9 +35,25 @@ h2 {
 	padding-bottom: 25px;
 }
 
+#title {
+	display: inline-block;
+	font-size: 20px;
+	padding: 0;
+	margin: 0px 0px 5px 0px;
+	border-bottom-style: solid;
+	border-width: 3px;
+	border-color: #c1b6b3;
+}
+
+#description {
+	font-size: 15px;
+	padding: 0;
+	margin: 0;
+}
+
 #slogan {
 	display: block;
-	font-size: 0.37em;
+	font-size: 14.5px;
 	text-indent: 115px;
 	padding-bottom: 25px;
 }
@@ -100,21 +116,39 @@ a.there:hover {
 }
 
 #content {
-	margin-top: 25px;
-	padding-top: 25px;
-	border-top-style: dotted;
-	border-width: 1px;
-	border-color: #363639;
+	margin-top: 40px;
+	margin-bottom: 10px;
 }
 
 #footer {
-	margin-top: 25px;
-	padding-top: 5px;
 	display: block;
-	border-top-style: dotted;
-	border-width: 1px;
-	border-color: #363639;
-	font-size: 0.66em;
+	font-size: 10px;
 	text-align: right;
 }
 
+#box label {
+	display: block;
+	font-size: 15px;
+}
+
+#box .field {
+	width: 100%;
+	margin-bottom: 25px;
+	font-size: 15px;
+}
+
+#box .submit {
+	font-size: 1.2em;
+}
+
+#box {
+	padding: 25px;
+	margin-bottom: 10px;
+	border-style: dotted;
+	border-left-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-top-width: 1px;
+	border-color: #363639;
+	box-shadow: -5px 0px 10px #c1b6b3;
+}
