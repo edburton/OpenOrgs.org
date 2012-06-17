@@ -22,8 +22,8 @@ class User(db.Model):
     
 class Event(db.Model):
     organizer = db.ReferenceProperty(reference_class=User)
-    title = db.StringProperty()
-    description = db.StringProperty(multiline=True)
+    title = db.TextProperty()
+    description = db.TextProperty()
 
 class EventInstance(db.Model):
     date = datetime.date
