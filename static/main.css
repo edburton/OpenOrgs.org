@@ -51,7 +51,7 @@ h4.title {
 
 #slogan {
 	display: block;
-	font-size: 14.5px;
+	font-size: 15px;
 	text-indent: 115px;
 	padding-bottom: 25px;
 }
@@ -59,6 +59,7 @@ h4.title {
 #login {
 	float: right;
 	font-size: 15px;
+	text-align: right;
 }
 
 #navigation {
@@ -129,6 +130,10 @@ div.box .field {
 	width: 100%;
 	margin-bottom: 10px;
 	font-size: 15px;
+}
+
+textarea {
+	resize:vertical;
 }
 
 div.box {
