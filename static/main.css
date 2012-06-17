@@ -43,7 +43,7 @@ h4.title {
 	margin: 0px 0px 5px 0px;
 	border-bottom-style: solid;
 	border-width: 3px;
-	border-color: #c1b6b3;
+	border-color: #8f807d;
 }
 
 #description {
@@ -136,30 +136,35 @@ div.box .field {
 div.box {
 	padding: 10px;
 	margin-bottom: 10px;
-	border-style: dotted;
+	border-style: none;
 	border-left-width: 1px;
 	border-right-width: 1px;
 	border-bottom-width: 1px;
 	border-top-width: 1px;
 	border-color: #363639;
-	box-shadow: -5px 0px 10px #c1b6b3;
+	box-shadow: 5px 0px 5px #8f807d;
 }
 
 #credits {
-	text-align: right;
-	margin: 5px 0px 0px 0px;
+	float: right;
+	margin: 0x 0px 5px 0px;
 }
 
 #credits span {
 	font-size: 15px;
-	border-top: solid;
+	border-bottom: solid;
 	border-width: 3px;
-	border-color: #c1b6b3;
+	border-color: #8f807d;
 }
 
 #functions {
 	display: block;
-	float: right;
+	text-align: right;
+	padding: 0px;
+	margin: 0px;
+}
+
+form {
 	padding: 0px;
 	margin: 0px;
 }

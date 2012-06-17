@@ -113,7 +113,7 @@ class ManageEventsPage(webapp2.RequestHandler):
         template_values = dict(template_values.items() + base_dictionary(self).items())
         events = return_current_users_events(self)
         if events:
-            template_values['events']=events;
+            template_values['events'] = events;
         temp = os.path.join(os.path.dirname(__file__), 'templates/manageevents.html')
         outstr = template.render(temp, template_values)
         self.response.out.write(outstr)
@@ -132,13 +132,10 @@ class AddEventPage(webapp2.RequestHandler):
         user = return_current_user(self)
         title = self.request.get('title')
         description = self.request.get('description')
-        logging.info("user.email %s", user.email)
-        logging.info("title %s", title)
-        logging.info("description %s", description)
         event = Event(parent=user)
         event.organizer = user;
-        event.title = title;
-        event.description = description;
+        event.title = title.strip();
+        event.description = description.strip();
         event.put();
         self.redirect("/events/manage")
 

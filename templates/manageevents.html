@@ -21,20 +21,20 @@
 {% if events|length %}
 {% for event in events %}
 <div class="box" >
-	<div id="functions" >
-		<form>
-			<input type="submit" value="Edit">
-			<input type="submit" value="Delete">
-		</form>
-	</div>
 	<div id="event">
+		<div id="credits">
+			<span>{{ user_email }}</span>
+		</div>
 		<h4 class="title">{{ event.title }}</h4>
 		<p id="description">
-			{{ event.description }}
+			{% autoescape off %}{{ event.description|linebreaksbr }}{% endautoescape %}
 		</p>
-	</div>
-	<div id="credits">
-		<span>{{ user_email }}</span>
+		<div id="functions" >
+			<form>
+				<input type="submit" value="Edit">
+				<input type="submit" value="Delete">
+			</form>
+		</div>
 	</div>
 </div>
 {% endfor %}
