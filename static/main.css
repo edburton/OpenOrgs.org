@@ -138,14 +138,8 @@ textarea {
 
 div.box {
 	padding: 10px;
-	margin-bottom: 10px;
-	border-style: none;
-	border-left-width: 1px;
-	border-right-width: 1px;
-	border-bottom-width: 1px;
-	border-top-width: 1px;
-	border-color: #363639;
-	box-shadow: 5px 0px 5px #8f807d;
+	margin-bottom: 20px;
+	box-shadow: 10px 0px 10px #8f807d;
 }
 
 #credits {
