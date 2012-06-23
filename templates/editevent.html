@@ -2,10 +2,11 @@
 <div class="box" >
 	<form method="post" >
 		<label for="title">Event Title</label>
-		<input class="field" type="text" name="title" required="required" />
+		<input class="field" type="text" name="title" required="required" value="{% if event %}{{ event.title }}{% endif %}">
 		<label for="description">Description</label>
-		<textarea class="field" name="description" required="required"></textarea>
+		<textarea class="field" name="description" >{% if event %}{{ event.description }}{% endif %}</textarea>
 		<div id="functions" >
+			<input class="submit" type="button" onclick="history.back();" value="Cancel">
 			<input class="submit" type="submit" value="Save">
 		</div>
 	</form>

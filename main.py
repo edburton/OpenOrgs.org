@@ -21,7 +21,6 @@ class User(db.Model):
     contacts = db.ListProperty(db.Key)
     
 class Event(db.Model):
-    organizer = db.ReferenceProperty(reference_class=User)
     title = db.TextProperty()
     description = db.TextProperty()
 
@@ -79,7 +78,7 @@ def return_current_users_events(self):
     user = return_current_user(self)
     if user:
         que = db.Query(Event)
-        que = que.filter('organizer =', user)
+        que = que.ancestor(user.key())
         events_s = que.fetch(limit=None)
         if len(events_s):
             return events_s
@@ -117,13 +116,28 @@ class ManageEventsPage(webapp2.RequestHandler):
         temp = os.path.join(os.path.dirname(__file__), 'templates/manageevents.html')
         outstr = template.render(temp, template_values)
         self.response.out.write(outstr)
+        
+    def post(self):
+        delete = self.request.get('delete')
+        if delete:
+            event = db.get(delete)
+            event.delete()
+        else:
+            edit = self.request.get('edit')
+            if edit:
+                self.redirect("/events/add?edit=" + edit)
+                return
+        self.redirect("/events/manage")
+        
 
 class AddEventPage(webapp2.RequestHandler):
     def get(self):
         template_values = { }
-        
         template_values = dict(template_values.items() + base_dictionary(self).items())
-
+        edit = self.request.get('edit')
+        if edit:
+            event = db.get(edit)
+            template_values['event'] = event
         temp = os.path.join(os.path.dirname(__file__), 'templates/addevent.html')
         outstr = template.render(temp, template_values)
         self.response.out.write(outstr)
@@ -132,11 +146,14 @@ class AddEventPage(webapp2.RequestHandler):
         user = return_current_user(self)
         title = self.request.get('title')
         description = self.request.get('description')
-        event = Event(parent=user)
-        event.organizer = user;
-        event.title = title.strip();
-        event.description = description.strip();
-        event.put();
+        edit = self.request.get('edit')
+        if edit:
+            event = db.get(edit)
+        else:
+            event = Event(parent=user)
+        event.title = title.strip()
+        event.description = description.strip()
+        event.put()
         self.redirect("/events/manage")
 
         
