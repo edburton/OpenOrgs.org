@@ -8,20 +8,6 @@
 		<label for="invitation">Invitation</label>
 		<textarea class="field" name="invitation" >{% if event %}{{ event.invitation }}{% endif %}</textarea>
 		<div id="dates">
-			{% if dates|length %}
-			{% for date in dates %}
-			<div class="box" >
-				<p class="date">
-					{{ date.date }}{% if date.note %}: {{ date.note }}{% endif %}
-				</p>
-				<div id="functions" >
-					<button type="submit" name="deletedate" value="{{ date.key }}">
-						Delete
-					</button>
-				</div>
-			</div>
-			{% endfor %}
-			{% endif %}
 			<div class="box" >
 				<label for="newdate">+ New Date</label>
 				<input type="text" name="newdate" id="newdate" maxlength="25" size="25"/ >
@@ -34,6 +20,20 @@
 					</button>
 				</div>
 			</div>
+			{% if dates|length %}
+			{% for date in dates %}
+			<div class="box" >
+				<p class="date">
+					{{ date.date }}{% if date.note %}: {{ date.note }}{% endif %}
+				</p>
+				<div id="functions" >
+					<button type="submit" name="deletedate" value="{{ date.key }}">
+						Delete Date
+					</button>
+				</div>
+			</div>
+			{% endfor %}
+			{% endif %}
 		</div>
 		<div id="functions" >
 			<button type="submit" name="save" value="save">
