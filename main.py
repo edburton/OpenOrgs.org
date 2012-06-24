@@ -11,23 +11,23 @@ from google.appengine.api import users
 from google.appengine.ext.webapp import template
 from webapp2_extras import sessions
 
-jinja_environment = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
+######################MODEL##########################
 
-################MODEL##########################
-
-class User(db.Model):
+class Contact(db.Model):
     email = db.EmailProperty()
     contacts = db.ListProperty(db.Key)
     
 class Event(db.Model):
     title = db.TextProperty()
     description = db.TextProperty()
+    invitation = db.TextProperty()
+    dates = db.ListProperty(db.Key)
 
-class EventInstance(db.Model):
-    date = datetime.date
+class Date(db.Model):
+    date = datetime.datetime
+    note = db.TextProperty()
     
-################CONTROLLER##########################   
+################CONTROLLER###########################   
 
 class BaseHandler(webapp2.RequestHandler):
     def dispatch(self):
@@ -64,13 +64,13 @@ def return_current_user(self):
     if (users.get_current_user()):
         email = users.get_current_user().email();
         if email:
-            que = db.Query(User)
+            que = db.Query(Contact)
             que = que.filter('email =', email)
             user_s = que.fetch(limit=1)
             if len(user_s):
                 return user_s[0]
             else:
-                user = User(email=email)
+                user = Contact(email=email)
                 user.put()
                 return user
         
@@ -146,6 +146,9 @@ class AddEventPage(webapp2.RequestHandler):
         user = return_current_user(self)
         title = self.request.get('title')
         description = self.request.get('description')
+        invitation = self.request.get('invitation')
+        newdate = self.request.get('date')
+        newnote = self.request.get('note')
         edit = self.request.get('edit')
         if edit:
             event = db.get(edit)
@@ -153,6 +156,7 @@ class AddEventPage(webapp2.RequestHandler):
             event = Event(parent=user)
         event.title = title.strip()
         event.description = description.strip()
+        event.invitation = invitation.strip()
         event.put()
         self.redirect("/events/manage")
 
@@ -177,6 +181,11 @@ class AddContactsPage(webapp2.RequestHandler):
         outstr = template.render(temp, template_values)
         self.response.out.write(outstr)
 
+################INITIALIZE###########################
+
+jinja_environment = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
+
 config = {'site_name' : 'OpenOrgs.org',
           'site_slogan' : 'for getting together whenever forever' }
 config['webapp2_extras.sessions'] = {
@@ -193,4 +202,3 @@ routes = [('/', MainPage),
 app = webapp2.WSGIApplication(routes=routes,
                               config=config,
                               debug=True)
-

@@ -26,6 +26,12 @@
 		<p id="description">
 			{% autoescape off %}{{ event.description|linebreaksbr }}{% endautoescape %}
 		</p>
+		<div id="dates">
+			<h3>Dates</h3>
+			<div class="box" >
+				
+			</div>
+		</div>
 		<div id="functions" >
 			<form method="post">
 				<button type="submit" name="edit" value="{{ event.key }}">

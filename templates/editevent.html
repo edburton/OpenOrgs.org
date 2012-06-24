@@ -1,13 +1,34 @@
 {% block editevent %}
 <div class="box" >
 	<form method="post" >
+		<h3>Event Information</h3>
 		<label for="title">Event Title</label>
 		<input class="field" type="text" name="title" required="required" value="{% if event %}{{ event.title }}{% endif %}">
 		<label for="description">Description</label>
 		<textarea class="field" name="description" >{% if event %}{{ event.description }}{% endif %}</textarea>
+		<label for="invitation">Invitation</label>
+		<textarea class="field" name="invitation" >{% if event %}{{ event.invitation }}{% endif %}</textarea>
+		<div id="dates">
+			<h3>Dates</h3>
+			<div class="box" >
+				<label for="date">New Date</label>
+				<input class="field" type="text" name="date" value="">
+				<label for="title">Note</label>
+				<input class="field" type="text" name="note" value="">
+				<div id="functions" >
+					<button type="submit" name="adddate" value="adddate">
+						Add New Date
+					</button>
+				</div>
+			</div>
+		</div>
 		<div id="functions" >
-			<input class="submit" type="button" onclick="history.back();" value="Cancel">
-			<input class="submit" type="submit" value="Save">
+			<button type="button" name="cancel" onclick="history.back();">
+				Cancel
+			</button>
+			<button type="submit" name="save" value="save">
+				Save
+			</button>
 		</div>
 	</form>
 </div>
