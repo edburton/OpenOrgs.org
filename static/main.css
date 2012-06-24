@@ -1,11 +1,35 @@
+/* css for timepicker */
+.ui-timepicker-div .ui-widget-header {
+	margin-bottom: 8px;
+}
+.ui-timepicker-div dl {
+	text-align: left;
+}
+.ui-timepicker-div dl dt {
+	height: 25px;
+	margin-bottom: -25px;
+}
+.ui-timepicker-div dl dd {
+	margin: 0 10px 10px 65px;
+}
+.ui-timepicker-div td {
+	font-size: 90%;
+}
+.ui-tpicker-grid-label {
+	background: none;
+	border: none;
+	margin: 0;
+	padding: 0;
+}
+
 body {
 	font-family: 'Open Sans', sans-serif;
 	background-color: #FFFFFF;
 	color: #363639;
 	padding: 50px 50px 50px 50px;
 	margin-left: auto;
-    margin-right: auto;
-	max-width:600px;
+	margin-right: auto;
+	max-width: 600px;
 }
 
 h1, h2, h3, h4, h5 {
@@ -131,15 +155,21 @@ label {
 div.box .field {
 	width: 100%;
 	margin-bottom: 10px;
-	font-size: 15px;
 }
 
 textarea {
 	resize: vertical;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 13px;
+}
+
+input {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 13px;
 }
 
 button {
-	font-size: 15px;
+	font-size: 13px;
 	font-family: 'Open Sans', sans-serif;
 }
 
@@ -147,6 +177,29 @@ div.box {
 	padding: 10px;
 	margin-bottom: 20px;
 	box-shadow: 10px 0px 10px #8f807d;
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+
+table.datepopup {
+	border-style: dotted;
+	border-width: 1px;
+	box-shadow: 10px 0px 10px #8f807d;
+	border-color: 363639;
+}
+
+p.date {
+	border: 0px;
+	margin: 0px;
+	padding: 0px;
+}
+
+img.datepicker {
+	vertical-align: text-top;
+}
+
+#dates {
+	margin-top: 20px;
 }
 
 #credits {

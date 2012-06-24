@@ -32,7 +32,11 @@
 			{% endif %}
 		</div>
 		<div id="footer">
-			{{site_name}} development: <a href="http://github.com/edburton/OpenOrgs.org">github.com/edburton/OpenOrgs.org</a>
+			{% if site_name = "OpenOrgs.org" %}
+				Powered by <a href="http://OpenOrgs.org">OpenOrgs.org</a> open source development at <a href="http://github.com/edburton/OpenOrgs.org">github.com/edburton/OpenOrgs.org</a>
+			{% else %}
+				{{site_name}} is powered by <a href="http://OpenOrgs.org">OpenOrgs.org</a>
+			{% endif %}
 		</div>
 	</body>
 </html>

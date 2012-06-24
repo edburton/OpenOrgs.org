@@ -1,7 +1,6 @@
-{% block editevent %}
+{% block editevent %} <script src="../static/datetimepicker_css.js"></script>
 <div class="box" >
 	<form method="post" >
-		<h3>Event Information</h3>
 		<label for="title">Event Title</label>
 		<input class="field" type="text" name="title" required="required" value="{% if event %}{{ event.title }}{% endif %}">
 		<label for="description">Description</label>
@@ -9,14 +8,28 @@
 		<label for="invitation">Invitation</label>
 		<textarea class="field" name="invitation" >{% if event %}{{ event.invitation }}{% endif %}</textarea>
 		<div id="dates">
-			<h3>Dates</h3>
+			{% if dates|length %}
+			{% for date in dates %}
 			<div class="box" >
-				<label for="date">New Date</label>
-				<input class="field" type="text" name="date" value="">
-				<label for="title">Note</label>
-				<input class="field" type="text" name="note" value="">
+				<p class="date">
+					{{ date.date }}{% if date.note %}: {{ date.note }}{% endif %}
+				</p>
 				<div id="functions" >
-					<button type="submit" name="adddate" value="adddate">
+					<button type="submit" name="deletedate" value="{{ date.key }}">
+						Delete
+					</button>
+				</div>
+			</div>
+			{% endfor %}
+			{% endif %}
+			<div class="box" >
+				<label for="newdate">+ New Date</label>
+				<input type="text" name="newdate" id="newdate" maxlength="25" size="25"/ >
+				<img class="datepicker" src="../static/images2/cal.png" onclick="javascript:NewCssCal ('newdate','ddMMyyyy','dropdown',true,'24',false,'future')"  style="cursor:pointer"/>
+				<label for="title">+ Note</label>
+				<input class="field" type="text" name="newnote" value="">
+				<div id="functions" >
+					<button type="submit" name="addnewdate" value="addnewdate">
 						Add New Date
 					</button>
 				</div>

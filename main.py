@@ -24,7 +24,7 @@ class Event(db.Model):
     dates = db.ListProperty(db.Key)
 
 class Date(db.Model):
-    date = datetime.datetime
+    date = db.DateTimeProperty()
     note = db.TextProperty()
     
 ################CONTROLLER###########################   
@@ -60,25 +60,25 @@ def base_dictionary(self):
          dictionary['log_in_or_out_text'] = 'login'
     return dictionary
 
-def return_current_user(self):
+def return_current_contact(self):
     if (users.get_current_user()):
         email = users.get_current_user().email();
         if email:
             que = db.Query(Contact)
             que = que.filter('email =', email)
-            user_s = que.fetch(limit=1)
-            if len(user_s):
-                return user_s[0]
+            contact_s = que.fetch(limit=1)
+            if len(contact_s):
+                return contact_s[0]
             else:
-                user = Contact(email=email)
-                user.put()
-                return user
+                contact = Contact(email=email)
+                contact.put()
+                return contact
         
-def return_current_users_events(self):
-    user = return_current_user(self)
-    if user:
+def return_current_contacts_events(self):
+    contact = return_current_contact(self)
+    if contact:
         que = db.Query(Event)
-        que = que.ancestor(user.key())
+        que = que.ancestor(contact.key())
         events_s = que.fetch(limit=None)
         if len(events_s):
             return events_s
@@ -110,7 +110,7 @@ class ManageEventsPage(webapp2.RequestHandler):
         template_values = { }
         
         template_values = dict(template_values.items() + base_dictionary(self).items())
-        events = return_current_users_events(self)
+        events = return_current_contacts_events(self)
         if events:
             template_values['events'] = events;
         temp = os.path.join(os.path.dirname(__file__), 'templates/manageevents.html')
@@ -121,6 +121,11 @@ class ManageEventsPage(webapp2.RequestHandler):
         delete = self.request.get('delete')
         if delete:
             event = db.get(delete)
+            que = db.Query(Date)
+            que = que.ancestor(event.key())
+            dates = que.fetch(limit=None)
+            for date in dates:
+                date.delete();
             event.delete()
         else:
             edit = self.request.get('edit')
@@ -138,27 +143,45 @@ class AddEventPage(webapp2.RequestHandler):
         if edit:
             event = db.get(edit)
             template_values['event'] = event
+            que = db.Query(Date)
+            que = que.ancestor(event.key())
+            dates = que.fetch(limit=None)
+            template_values['dates'] = dates
         temp = os.path.join(os.path.dirname(__file__), 'templates/addevent.html')
         outstr = template.render(temp, template_values)
         self.response.out.write(outstr)
         
     def post(self):
-        user = return_current_user(self)
+        contact = return_current_contact(self)
         title = self.request.get('title')
         description = self.request.get('description')
         invitation = self.request.get('invitation')
-        newdate = self.request.get('date')
-        newnote = self.request.get('note')
+        newdate = self.request.get('newdate')
+        newnote = self.request.get('newnote')
+        addnewdate = self.request.get('addnewdate')
+        deletedate = self.request.get('deletedate')
+        if deletedate:
+            date = db.get(deletedate)
+            date.delete()
         edit = self.request.get('edit')
         if edit:
             event = db.get(edit)
         else:
-            event = Event(parent=user)
+            event = Event(parent=contact)
         event.title = title.strip()
         event.description = description.strip()
         event.invitation = invitation.strip()
         event.put()
-        self.redirect("/events/manage")
+        if newdate:
+            date = Date(parent=event)
+            date.date = datetime.datetime.strptime(newdate, "%d/%m/%Y %H:%M")
+            date.note = newnote.strip()
+            date.put()
+        if addnewdate:
+            edit = str(event.key())
+            self.redirect("/events/add?edit=" + edit)
+        else:
+            self.redirect("/events/manage")
 
         
 class ContactsPage(webapp2.RequestHandler):
