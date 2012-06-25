@@ -30,12 +30,12 @@
 			<div class="datelist">
 				{% for date in eventanddates.dates %}
 				<div class="box" >
-					<p class="date">
+					<div class="date">
 						{{ date.date }}
 						{% if date.note %}
 						<span class="note">{% autoescape off %}{{ date.note|linebreaksbr }}{% endautoescape %} </span>
 						{% endif %}
-					</p>
+					</div>
 				</div>
 				{% endfor %}
 			</div>

@@ -23,17 +23,16 @@
 			{% if dates|length %}
 			{% for date in dates %}
 			<div class="box" >
-				<p class="date">
+				<div class="date">
+					<span class="inline_functions" >
+						<button class="inline_functions" type="submit" name="deletethisdate" value="{{ date.key }}">
+							Remove
+						</button>
+					</span>
 					{{ date.date }}
-
 					{% if date.note %}
 					<span class="note">{% autoescape off %}{{ date.note|linebreaksbr }}{% endautoescape %}</span>
-				</p>
-				{% endif %}
-				<div id="functions" >
-					<button type="submit" name="deletethisdate" value="{{ date.key }}">
-						Remove
-					</button>
+					{% endif %}
 				</div>
 			</div>
 			{% endfor %}

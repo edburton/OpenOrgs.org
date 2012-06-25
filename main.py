@@ -33,7 +33,12 @@ class Date(db.Model):
 class EventAndDates:
     def __init__(self, event, dates):
         self.event = event
-        self.dates = dates  
+        self.dates = dates
+
+class DateAndEvent:
+    def __init__(self, date, event):
+        self.date = date 
+        self.event = event 
 
 class BaseHandler(webapp2.RequestHandler):
     def dispatch(self):
@@ -94,9 +99,19 @@ def return_current_contacts_events(self):
 class MainPage(webapp2.RequestHandler):
     def get(self):
         template_values = { }
-        
         template_values = dict(template_values.items() + base_dictionary(self).items())
-
+        events = return_current_contacts_events(self)
+        datesandevents = []
+        if events:
+            for event in events:
+                que = db.Query(Date)
+                que.ancestor(event.key())
+                que.order('date')
+                dates = que.fetch(limit=None)
+                for date in dates:
+                    dateandevent = DateAndEvent(date, event)
+                    datesandevents.append(dateandevent)
+            template_values['datesandevents'] = sorted(datesandevents, key=lambda d: d.date.date)
         temp = os.path.join(os.path.dirname(__file__), 'templates/index.html')
         outstr = template.render(temp, template_values)
         self.response.out.write(outstr)
