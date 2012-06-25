@@ -9,16 +9,13 @@
 		<textarea class="field" name="invitation" >{% if event %}{{ event.invitation }}{% endif %}</textarea>
 		<div class="datelist">
 			<div class="box" >
+				<span class="inline_functions" >
+					<button class="inline_functions" type="submit" name="addnewdate" value="addnewdate">
+						Add
+					</button> </span>
 				<label for="newdate">Date</label>
 				<input type="text" name="newdate" id="newdate" maxlength="25" size="25"/ value="" >
 				<img class="datepicker" src="../static/images2/cal.png" onclick="javascript:NewCssCal ('newdate','ddMMyyyy','dropdown',true,'24',false,'future')"  style="cursor:pointer"/>
-				<label for="newnote">Note</label>
-				<textarea class="field" name="newnote" ></textarea>
-				<div id="functions" >
-					<button type="submit" name="addnewdate" value="addnewdate">
-						Add
-					</button>
-				</div>
 			</div>
 			{% if dates|length %}
 			{% for date in dates %}
@@ -27,12 +24,8 @@
 					<span class="inline_functions" >
 						<button class="inline_functions" type="submit" name="deletethisdate" value="{{ date.key }}">
 							Remove
-						</button>
-					</span>
+						</button> </span>
 					{{ date.date }}
-					{% if date.note %}
-					<span class="note">{% autoescape off %}{{ date.note|linebreaksbr }}{% endautoescape %}</span>
-					{% endif %}
 				</div>
 			</div>
 			{% endfor %}

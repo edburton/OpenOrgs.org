@@ -26,7 +26,6 @@ class Event(db.Model):
 
 class Date(db.Model):
     date = db.DateTimeProperty()
-    note = db.TextProperty()
     
 ################CONTROLLER########################### 
 
@@ -189,7 +188,6 @@ class AddEventPage(webapp2.RequestHandler):
         description = self.request.get('description')
         invitation = self.request.get('invitation')
         newdate = self.request.get('newdate')
-        newnote = self.request.get('newnote')
         addnewdate = self.request.get('addnewdate')
         deletethisdate = self.request.get('deletethisdate')
         if deletethisdate:
@@ -207,7 +205,6 @@ class AddEventPage(webapp2.RequestHandler):
         if newdate:
             date = Date(parent=event)
             date.date = datetime.datetime.strptime(newdate, "%d/%m/%Y %H:%M")
-            date.note = newnote.strip()
             date.put()
         if addnewdate or deletethisdate:
             edit = str(event.key())

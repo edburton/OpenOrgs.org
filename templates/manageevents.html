@@ -32,9 +32,6 @@
 				<div class="box" >
 					<div class="date">
 						{{ date.date }}
-						{% if date.note %}
-						<span class="note">{% autoescape off %}{{ date.note|linebreaksbr }}{% endautoescape %} </span>
-						{% endif %}
 					</div>
 				</div>
 				{% endfor %}
