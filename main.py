@@ -5,6 +5,8 @@ import webapp2
 import jinja2
 import os
 import logging
+import time
+import calendar
 
 from google.appengine.ext import db
 from google.appengine.api import users
@@ -21,13 +23,17 @@ class Event(db.Model):
     title = db.TextProperty()
     description = db.TextProperty()
     invitation = db.TextProperty()
-    dates = db.ListProperty(db.Key)
 
 class Date(db.Model):
     date = db.DateTimeProperty()
     note = db.TextProperty()
     
-################CONTROLLER###########################   
+################CONTROLLER########################### 
+
+class EventAndDates:
+    def __init__(self, event, dates):
+        self.event = event
+        self.dates = dates  
 
 class BaseHandler(webapp2.RequestHandler):
     def dispatch(self):
@@ -65,7 +71,7 @@ def return_current_contact(self):
         email = users.get_current_user().email();
         if email:
             que = db.Query(Contact)
-            que = que.filter('email =', email)
+            que.filter('email =', email)
             contact_s = que.fetch(limit=1)
             if len(contact_s):
                 return contact_s[0]
@@ -78,7 +84,7 @@ def return_current_contacts_events(self):
     contact = return_current_contact(self)
     if contact:
         que = db.Query(Event)
-        que = que.ancestor(contact.key())
+        que.ancestor(contact.key())
         events_s = que.fetch(limit=None)
         if len(events_s):
             return events_s
@@ -111,8 +117,17 @@ class ManageEventsPage(webapp2.RequestHandler):
         
         template_values = dict(template_values.items() + base_dictionary(self).items())
         events = return_current_contacts_events(self)
+        eventsanddates = []
         if events:
-            template_values['events'] = events;
+            for event in events:
+                que = db.Query(Date)
+                que.ancestor(event.key())
+                que.order('date')
+                dates = que.fetch(limit=None)
+                eventanddate = EventAndDates(event, dates)
+                eventsanddates.append(eventanddate)
+            template_values['eventsanddates'] = eventsanddates;
+                
         temp = os.path.join(os.path.dirname(__file__), 'templates/manageevents.html')
         outstr = template.render(temp, template_values)
         self.response.out.write(outstr)
@@ -122,7 +137,7 @@ class ManageEventsPage(webapp2.RequestHandler):
         if delete:
             event = db.get(delete)
             que = db.Query(Date)
-            que = que.ancestor(event.key())
+            que.ancestor(event.key())
             dates = que.fetch(limit=None)
             for date in dates:
                 date.delete();
@@ -144,9 +159,11 @@ class AddEventPage(webapp2.RequestHandler):
             event = db.get(edit)
             template_values['event'] = event
             que = db.Query(Date)
-            que = que.ancestor(event.key())
+            que.ancestor(event.key())
+            que.order('date')
             dates = que.fetch(limit=None)
             template_values['dates'] = dates
+            
         temp = os.path.join(os.path.dirname(__file__), 'templates/addevent.html')
         outstr = template.render(temp, template_values)
         self.response.out.write(outstr)
@@ -159,9 +176,9 @@ class AddEventPage(webapp2.RequestHandler):
         newdate = self.request.get('newdate')
         newnote = self.request.get('newnote')
         addnewdate = self.request.get('addnewdate')
-        deletedate = self.request.get('deletedate')
-        if deletedate:
-            date = db.get(deletedate)
+        deletethisdate = self.request.get('deletethisdate')
+        if deletethisdate:
+            date = db.get(deletethisdate)
             date.delete()
         edit = self.request.get('edit')
         if edit:
@@ -177,7 +194,7 @@ class AddEventPage(webapp2.RequestHandler):
             date.date = datetime.datetime.strptime(newdate, "%d/%m/%Y %H:%M")
             date.note = newnote.strip()
             date.put()
-        if addnewdate:
+        if addnewdate or deletethisdate:
             edit = str(event.key())
             self.redirect("/events/add?edit=" + edit)
         else:
