@@ -1,0 +1,19 @@
+{% extends "_base.html" %}
+{% block navigation %}
+<ul id="navigation">
+	<li>
+		<a class="here" href="/">Admin</a>
+	</li>
+</ul>
+{% endblock %}
+{% block content %}
+{% if admin %}
+<div class="box">
+	Administrator console goes here
+</div>
+{% else %}
+<div class="box">
+	You do not have permission to Administer {{site_name}}
+</div>
+{% endif %}
+{% endblock %}

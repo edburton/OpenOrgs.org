@@ -15,7 +15,10 @@ from webapp2_extras import sessions
 
 ######################MODEL##########################
 
+
+
 class Contact(db.Model):
+    id = db.StringProperty();
     email = db.EmailProperty()
     contacts = db.ListProperty(db.Key)
     
@@ -65,24 +68,51 @@ def base_dictionary(self):
         dictionary['log_in_or_out_url'] = users.create_logout_url(self.request.uri)
         dictionary['log_in_or_out_text'] = 'logout'
         dictionary['user_email'] = users.get_current_user().email()
+        if users.is_current_user_admin():
+            dictionary['admin'] = 'true'
     else:
          dictionary['log_in_or_out_url'] = users.create_login_url(self.request.uri)
          dictionary['log_in_or_out_text'] = 'login'
     return dictionary
 
+def return_contact_for_email(email):
+    if email:
+        que = db.Query(Contact)
+        que.filter('email =', email)
+        contact_s = que.fetch(limit=1)
+        if len(contact_s):
+            return contact_s[0]
+        else:
+            contact = Contact(email=email)
+            contact.put()
+            return contact
+
 def return_current_contact(self):
     if (users.get_current_user()):
+        id = users.get_current_user().user_id();
         email = users.get_current_user().email();
-        if email:
+        if id:
             que = db.Query(Contact)
-            que.filter('email =', email)
+            que.filter('id =', id)
             contact_s = que.fetch(limit=1)
             if len(contact_s):
-                return contact_s[0]
-            else:
-                contact = Contact(email=email)
-                contact.put()
+                contact = contact_s[0]
+                if contact.email != email:
+                    contact.email = email
+                    contact.put();
                 return contact
+            else:
+                que = db.Query(Contact)
+                que.filter('email =', email)
+                contact_s = que.fetch(limit=1)
+                if len(contact_s):
+                    contact = contact_s[0]
+                    contact.id = id;
+                    contact.put();
+                    return contact
+                new_contact = Contact(email=email, id=id)
+                new_contact.put()
+                return new_contact
         
 def return_current_contacts_events(self):
     contact = return_current_contact(self)
@@ -122,6 +152,14 @@ class LoginPage(webapp2.RequestHandler):
         template_values = dict(template_values.items() + base_dictionary(self).items())
 
         temp = os.path.join(os.path.dirname(__file__), 'templates/login.html')
+        outstr = template.render(temp, template_values)
+        self.response.out.write(outstr)
+        
+class AdminPage(webapp2.RequestHandler):
+    def get(self):
+        template_values = { }
+        template_values = dict(template_values.items() + base_dictionary(self).items())
+        temp = os.path.join(os.path.dirname(__file__), 'templates/admin.html')
         outstr = template.render(temp, template_values)
         self.response.out.write(outstr)
 
@@ -223,16 +261,24 @@ class ContactsPage(webapp2.RequestHandler):
         outstr = template.render(temp, template_values)
         self.response.out.write(outstr)
         
-class AddContactsPage(webapp2.RequestHandler):
+class InviteContactsPage(webapp2.RequestHandler):
     def get(self):
         template_values = { }
         
         template_values = dict(template_values.items() + base_dictionary(self).items())
 
-        temp = os.path.join(os.path.dirname(__file__), 'templates/addcontacts.html')
+        temp = os.path.join(os.path.dirname(__file__), 'templates/invitecontacts.html')
         outstr = template.render(temp, template_values)
         self.response.out.write(outstr)
-
+    def post(self):
+        contact = return_current_contact(self)
+        emails = self.request.get('emails')
+        if emails:
+            emaillist = emails.split();
+            for address in emaillist:
+                logging.info(address)    
+        self.redirect("/contacts")
+            
 ################INITIALIZE###########################
 
 jinja_environment = jinja2.Environment(
@@ -246,10 +292,11 @@ config['webapp2_extras.sessions'] = {
 
 routes = [('/', MainPage),
                                ('/login', LoginPage),
+                               ('/admin', AdminPage),
                                ('/events/manage', ManageEventsPage),
                                ('/events/add', AddEventPage),
                                ('/contacts', ContactsPage),
-                               ('/contacts/add', AddContactsPage)]
+                               ('/contacts/invite', InviteContactsPage)]
 
 app = webapp2.WSGIApplication(routes=routes,
                               config=config,

@@ -7,7 +7,10 @@
 	<body>
 	<body>
 		<div id="login">
-			<a href="{{ log_in_or_out_url }}">{{ log_in_or_out_text }}</a>{% if user_email %}&nbsp;{{ user_email }}{% endif %}
+			<a href="{{ log_in_or_out_url }}">{{ log_in_or_out_text }}</a>{% if user_email %}&nbsp;{{ user_email }}{% endif %}		
+			{% if admin %}
+				<br><a href="/admin">admin</a>
+			{% endif %}		
 		</div>
 		<div id="header">
 			<h1><a href="/">{{site_name}}
