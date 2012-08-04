@@ -15,7 +15,15 @@
 </ul>
 {% endblock %}
 {% block content %}
-<div class="box">
-	Functionality to add contacts goes here
+<div class="box" >
+	<form method="post" >
+		<label for="emails">Enter Email Address(es separated by spaces or newlines)</label>
+		<textarea rows="10" class="field" name="emails" > </textarea>
+		<div id="functions" >
+			<button type="submit" name="save" value="save">
+				Add Contacts
+			</button>
+		</div>
+	</form>
 </div>
 {% endblock %}
