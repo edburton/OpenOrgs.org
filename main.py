@@ -261,13 +261,13 @@ class ContactsPage(webapp2.RequestHandler):
         outstr = template.render(temp, template_values)
         self.response.out.write(outstr)
         
-class InviteContactsPage(webapp2.RequestHandler):
+class AddContactsPage(webapp2.RequestHandler):
     def get(self):
         template_values = { }
         
         template_values = dict(template_values.items() + base_dictionary(self).items())
 
-        temp = os.path.join(os.path.dirname(__file__), 'templates/invitecontacts.html')
+        temp = os.path.join(os.path.dirname(__file__), 'templates/addcontacts.html')
         outstr = template.render(temp, template_values)
         self.response.out.write(outstr)
     def post(self):
@@ -296,7 +296,7 @@ routes = [('/', MainPage),
                                ('/events/manage', ManageEventsPage),
                                ('/events/add', AddEventPage),
                                ('/contacts', ContactsPage),
-                               ('/contacts/invite', InviteContactsPage)]
+                               ('/contacts/add', AddContactsPage)]
 
 app = webapp2.WSGIApplication(routes=routes,
                               config=config,
