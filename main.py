@@ -15,12 +15,13 @@ from webapp2_extras import sessions
 
 ######################MODEL##########################
 
-
-
 class Contact(db.Model):
     id = db.StringProperty();
     email = db.EmailProperty()
-    contacts = db.ListProperty(db.Key)
+    confirmedContacts = db.ListProperty(db.Key)
+    incomingContacts = db.ListProperty(db.Key)
+    outgoingContacts = db.ListProperty(db.Key)
+    
     
 class Event(db.Model):
     title = db.TextProperty()
@@ -31,6 +32,7 @@ class Date(db.Model):
     date = db.DateTimeProperty()
     
 ################CONTROLLER########################### 
+
 
 class EventAndDates:
     def __init__(self, event, dates):
@@ -101,7 +103,7 @@ def return_current_contact(self):
                     contact.email = email
                     contact.put();
                 return contact
-            else:
+            elif email:
                 que = db.Query(Contact)
                 que.filter('email =', email)
                 contact_s = que.fetch(limit=1)
@@ -123,8 +125,6 @@ def return_current_contacts_events(self):
         if len(events_s):
             return events_s
         
-        
-
 class MainPage(webapp2.RequestHandler):
     def get(self):
         template_values = { }
@@ -254,9 +254,24 @@ class AddEventPage(webapp2.RequestHandler):
 class ContactsPage(webapp2.RequestHandler):
     def get(self):
         template_values = { }
-        
         template_values = dict(template_values.items() + base_dictionary(self).items())
-
+        contact = return_current_contact(self)
+        if contact:
+            if contact.confirmedContacts:
+                confirmedContacts = []
+                for confirmedContact in contact.confirmedContacts:
+                    confirmedContacts.append(db.get(confirmedContact))
+                template_values['confirmedContacts'] = confirmedContacts;
+            if contact.incomingContacts:
+                incomingContacts = []
+                for incomingContact in contact.incomingContacts:
+                    incomingContacts.append(db.get(incomingContact))
+                template_values['incomingContacts'] = incomingContacts;
+                if contact.outgoingContacts:
+                    outgoingContacts = []
+                    for outgoingContact in contact.outgoingContacts:
+                        outgoingContacts.append(db.get(outgoingContact))
+                    template_values['outgoingContacts'] = outgoingContacts;
         temp = os.path.join(os.path.dirname(__file__), 'templates/contacts.html')
         outstr = template.render(temp, template_values)
         self.response.out.write(outstr)
@@ -271,12 +286,20 @@ class AddContactsPage(webapp2.RequestHandler):
         outstr = template.render(temp, template_values)
         self.response.out.write(outstr)
     def post(self):
-        contact = return_current_contact(self)
         emails = self.request.get('emails')
         if emails:
             emaillist = emails.split();
-            for address in emaillist:
-                logging.info(address)    
+            requestor = return_current_contact(self);
+            for email in emaillist:
+                invitee = return_contact_for_email(email)
+                if not invitee.key() in requestor.confirmedContacts:
+                    if not invitee.key() in requestor.incomingContacts:
+                        if not invitee.key() in requestor.outgoingContacts:
+                            requestor.outgoingContacts.append(invitee.key())
+                            invitee.incomingContacts.append(requestor.key())
+                            requestor.put()
+                            invitee.put()
+                            logging.info(email)
         self.redirect("/contacts")
             
 ################INITIALIZE###########################

@@ -15,7 +15,49 @@
 </ul>
 {% endblock %}
 {% block content %}
+{% if incomingContacts|length %}
 <div class="box">
-	List of contacts goes here
+	<h4 class="title">Contacts Requests</h4>
+	{% for incomingContact in incomingContacts %}
+	<div class="box" >
+		<span class="inline_functions">
+			<button type="submit" name="accept" value="{{ incomingContact.key }}">
+				Accept
+			</button>
+			<button type="submit" name="decline" value="{{ incomingContact.key }}">
+				Decline
+			</button> </span>
+		{{ incomingContact.email }}
+	</div>
+	{% endfor %}
 </div>
+{% endif %}
+{% if confirmedContacts|length %}
+<div class="box">
+	<h4 class="title">Confirmed Contacts</h4>
+	{% for confirmedContact in confirmedContacts %}
+	<div class="box" >
+		<span class="inline_functions">
+			<button type="submit" name="remove" value="{{ confirmedContact.key }}">
+				Remove
+			</button> </span>
+		{{ confirmedContact.email }}
+	</div>
+	{% endfor %}
+</div>
+{% endif %}
+{% if outgoingContacts|length %}
+<div class="box">
+	<h4 class="title">Pending Contacts</h4>
+	{% for outgoingContact in outgoingContacts %}
+	<div class="box" >
+		<span class="inline_functions">
+			<button type="submit" name="cancel" value="{{ outgoingContact.key }}">
+				Cancel
+			</button> </span>
+		{{ outgoingContact.email }}
+	</div>
+	{% endfor %}
+</div>
+{% endif %}
 {% endblock %}
