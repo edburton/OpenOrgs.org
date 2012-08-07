@@ -72,6 +72,10 @@ def base_dictionary(self):
         dictionary['user_email'] = users.get_current_user().email()
         if users.is_current_user_admin():
             dictionary['admin'] = 'true'
+        contact = return_current_contact(self)
+        requests = len(contact.incomingContacts);
+        if requests:
+            dictionary['contact_requests'] = requests
     else:
          dictionary['log_in_or_out_url'] = users.create_login_url(self.request.uri)
          dictionary['log_in_or_out_text'] = 'login'
@@ -267,11 +271,11 @@ class ContactsPage(webapp2.RequestHandler):
                 for incomingContact in contact.incomingContacts:
                     incomingContacts.append(db.get(incomingContact))
                 template_values['incomingContacts'] = incomingContacts;
-                if contact.outgoingContacts:
-                    outgoingContacts = []
-                    for outgoingContact in contact.outgoingContacts:
-                        outgoingContacts.append(db.get(outgoingContact))
-                    template_values['outgoingContacts'] = outgoingContacts;
+            if contact.outgoingContacts:
+                outgoingContacts = []
+                for outgoingContact in contact.outgoingContacts:
+                    outgoingContacts.append(db.get(outgoingContact))
+                template_values['outgoingContacts'] = outgoingContacts;
         temp = os.path.join(os.path.dirname(__file__), 'templates/contacts.html')
         outstr = template.render(temp, template_values)
         self.response.out.write(outstr)

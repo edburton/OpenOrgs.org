@@ -5,7 +5,7 @@
 		<a class="here" href="/">Events</a>
 	</li>
 	<li>
-		<a class="there" href="/contacts">Contacts</a>
+		<a class="there" href="/contacts">Contacts{% if contact_requests %}<span class="badge topbadge">{{ contact_requests }}</span>{% endif %}</a>
 	</li>
 </ul>
 <ul id="sub_navigation">

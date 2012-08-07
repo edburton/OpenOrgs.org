@@ -90,7 +90,8 @@ span.note {
 }
 
 #navigation a, #sub_navigation a {
-	margin-right: 15px;
+	margin-right: 25px;
+	position: relative;
 	font-size: 30px;
 	border-width: 5px;
 	border-color: #363639;
@@ -206,6 +207,7 @@ img.datepicker {
 
 span.inline_functions {
 	float: right;
+	position: relative;
 }
 
 button.inline_functions {
@@ -234,4 +236,37 @@ ul.inline_functions, li.inline_functions, button.inline_functions {
 	display: block;
 	font-size: 10px;
 	text-align: right;
+}
+
+.badge {
+	z-index: 100;
+	background: radial-gradient( 5px -9px, circle, white 8%, red 26px );
+	background: -moz-radial-gradient( 5px -9px, circle, white 8%, red 26px );
+	background: -ms-radial-gradient( 5px -9px, circle, white 8%, red 26px );
+	background: -o-radial-gradient( 5px -9px, circle, white 8%, red 26px );
+	background: -webkit-radial-gradient( 5px -9px, circle, white 8%, red 26px );
+	background-color: red;
+	border: 2px solid white;
+	border-radius: 12px; /* one half of ( (border * 2) + height + padding ) */
+	box-shadow: 1px 1px 1px black;
+	color: white;
+	font: bold 15px/13px 'Open Sans', sans-serif;
+	height: 16px;
+	padding: 4px 3px 0 3px;
+	text-align: center;
+	min-width: 14px;
+	position: relative;
+	display: inline-block;
+	position: absolute;
+}
+
+.topbadge {
+	top: -5px;
+	right: -15px;
+}
+
+.rightbadge {
+	right: -width;
+	top: -2px;
+	left: auto;
 }

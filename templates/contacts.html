@@ -5,7 +5,7 @@
 		<a class="there" href="/">Events</a>
 	</li>
 	<li>
-		<a class="here" href="/contacts">Contacts</a>
+		<a class="here" href="/contacts">Contacts{% if contact_requests %}<span class="badge topbadge">{{ contact_requests }}</span>{% endif %}</a>
 	</li>
 </ul>
 <ul id="sub_navigation">
@@ -26,7 +26,7 @@
 			</button>
 			<button type="submit" name="decline" value="{{ incomingContact.key }}">
 				Decline
-			</button> </span>
+			</button><span class="badge rightbadge">!</span></span>
 		{{ incomingContact.email }}
 	</div>
 	{% endfor %}
