@@ -83,10 +83,13 @@ def base_dictionary(self):
 
 def return_contact_for_email(email):
     if email:
+        email = email.lower()
         que = db.Query(Contact)
         que.filter('email =', email)
         contact_s = que.fetch(limit=1)
         if len(contact_s):
+            contact=contact_s[0];
+            contact_s[0].email=email #force returned email to be lowercase
             return contact_s[0]
         else:
             contact = Contact(email=email)
@@ -97,6 +100,7 @@ def return_current_contact(self):
     if (users.get_current_user()):
         id = users.get_current_user().user_id();
         email = users.get_current_user().email();
+        email = email.lower()
         if id:
             que = db.Query(Contact)
             que.filter('id =', id)
