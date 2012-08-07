@@ -280,6 +280,47 @@ class ContactsPage(webapp2.RequestHandler):
         outstr = template.render(temp, template_values)
         self.response.out.write(outstr)
         
+    def post(self):
+        accept = self.request.get('accept')
+        decline = self.request.get('decline')
+        remove = self.request.get('remove')
+        cancel = self.request.get('cancel')
+        if accept:
+            thisContact = return_current_contact(self)
+            thatContact = db.get(accept)
+            if  thatContact.key() in thisContact.incomingContacts and thisContact.key() in thatContact.outgoingContacts:
+                thisContact.incomingContacts.remove(thatContact.key())
+                thisContact.confirmedContacts.append(thatContact.key())
+                thatContact.outgoingContacts.remove(thisContact.key())
+                thatContact.confirmedContacts.append(thisContact.key())
+                thisContact.put();
+                thatContact.put();
+        elif decline:
+            thisContact = return_current_contact(self)
+            thatContact = db.get(decline)
+            if  thatContact.key() in thisContact.incomingContacts and thisContact.key() in thatContact.outgoingContacts:
+                thisContact.incomingContacts.remove(thatContact.key())
+                thatContact.outgoingContacts.remove(thisContact.key())
+                thisContact.put();
+                thatContact.put();
+        elif remove:
+            thisContact = return_current_contact(self)
+            thatContact = db.get(remove)
+            if  thatContact.key() in thisContact.confirmedContacts and thisContact.key() in thatContact.confirmedContacts:
+                thisContact.confirmedContacts.remove(thatContact.key())
+                thatContact.confirmedContacts.remove(thisContact.key())
+                thisContact.put();
+                thatContact.put();
+        elif cancel:
+            thisContact = return_current_contact(self)
+            thatContact = db.get(cancel)
+            if  thatContact.key() in thisContact.outgoingContacts and thisContact.key() in thatContact.incomingContacts:
+                thisContact.outgoingContacts.remove(thatContact.key())
+                thatContact.incomingContacts.remove(thisContact.key())
+                thisContact.put();
+                thatContact.put();
+        self.redirect("/contacts")
+        
 class AddContactsPage(webapp2.RequestHandler):
     def get(self):
         template_values = { }
@@ -296,14 +337,17 @@ class AddContactsPage(webapp2.RequestHandler):
             requestor = return_current_contact(self);
             for email in emaillist:
                 invitee = return_contact_for_email(email)
-                if not invitee.key() in requestor.confirmedContacts:
-                    if not invitee.key() in requestor.incomingContacts:
-                        if not invitee.key() in requestor.outgoingContacts:
-                            requestor.outgoingContacts.append(invitee.key())
-                            invitee.incomingContacts.append(requestor.key())
-                            requestor.put()
-                            invitee.put()
-                            logging.info(email)
+                if requestor != invitee:
+                    if not invitee.key() in requestor.confirmedContacts:
+                        if not invitee.key() in requestor.incomingContacts:
+                            if not invitee.key() in requestor.outgoingContacts:
+                                if not requestor.key() in invitee.confirmedContacts:
+                                    if not requestor.key() in invitee.incomingContacts:
+                                        if not requestor.key() in invitee.outgoingContacts:
+                                            requestor.outgoingContacts.append(invitee.key())
+                                            invitee.incomingContacts.append(requestor.key())
+                                            requestor.put()
+                                            invitee.put()
         self.redirect("/contacts")
             
 ################INITIALIZE###########################

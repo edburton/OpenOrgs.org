@@ -38,6 +38,12 @@
 	</div>
 </div>
 {% endfor %}
+{% else %}
+<div class="box">
+	You have no upcoming Event dates
+	<br>
+	<br>
+	Would you like to <a href="/events/add">Add an Event</a>?
+</div>
 {% endif %}
-
 {% endblock %}
