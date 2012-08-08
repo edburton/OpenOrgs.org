@@ -166,6 +166,10 @@ div.box {
 	border-bottom-right-radius: 10px;
 }
 
+div.alerted {
+	box-shadow: 10px 0px 10px red;
+}
+
 div.datelist {
 	margin-top: 10px;
 	margin-bottom: 0px;
@@ -248,7 +252,7 @@ ul.inline_functions, li.inline_functions, button.inline_functions {
 	background-color: red;
 	border: 2px solid white;
 	border-radius: 12px; /* one half of ( (border * 2) + height + padding ) */
-	box-shadow: 10px 0px 10px #8f807d;
+	box-shadow: 10px 0px 10px red;
 	color: white;
 	font: bold 15px/13px 'Open Sans', sans-serif;
 	height: 16px;
