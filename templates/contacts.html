@@ -49,14 +49,16 @@
 	{% endif %}
 	{% if outgoingContacts %}
 	<div class="box">
-		<h4 class="title">Pending Contacts</h4>
+		<h4 class="title faded">Pending Contacts</h4>
 		{% for outgoingContact in outgoingContacts %}
 		<div class="box" >
 			<span class="inline_functions">
 				<button type="submit" name="cancel" value="{{ outgoingContact.key }}">
 					Cancel
 				</button> </span>
-			{{ outgoingContact.email }}
+			<div class="faded">
+				{{ outgoingContact.email }}
+			</div>
 		</div>
 		{% endfor %}
 	</div>

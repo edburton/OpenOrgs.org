@@ -270,3 +270,11 @@ ul.inline_functions, li.inline_functions, button.inline_functions {
 	top: -2px;
 	left: auto;
 }
+
+.faded {
+	opacity: 0.5;
+}
+
+.notfaded {
+	opacity: 1;
+}

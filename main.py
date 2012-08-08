@@ -69,7 +69,7 @@ def base_dictionary(self):
     if users.get_current_user():
         dictionary['log_in_or_out_url'] = users.create_logout_url(self.request.uri)
         dictionary['log_in_or_out_text'] = 'logout'
-        dictionary['user_email'] = users.get_current_user().email()
+        dictionary['user_email'] = (users.get_current_user().email()).lower()
         if users.is_current_user_admin():
             dictionary['admin'] = 'true'
         contact = return_current_contact(self)
@@ -88,8 +88,8 @@ def return_contact_for_email(email):
         que.filter('email =', email)
         contact_s = que.fetch(limit=1)
         if len(contact_s):
-            contact=contact_s[0];
-            contact_s[0].email=email #force returned email to be lowercase
+            contact = contact_s[0];
+            contact_s[0].email = email #force returned email to be lowercase
             return contact_s[0]
         else:
             contact = Contact(email=email)
@@ -341,7 +341,7 @@ class AddContactsPage(webapp2.RequestHandler):
             requestor = return_current_contact(self);
             for email in emaillist:
                 invitee = return_contact_for_email(email)
-                if requestor != invitee:
+                if requestor.key() != invitee.key():
                     if not invitee.key() in requestor.confirmedContacts:
                         if not invitee.key() in requestor.incomingContacts:
                             if not invitee.key() in requestor.outgoingContacts:
