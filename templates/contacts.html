@@ -18,7 +18,7 @@
 <form method="post">
 	{% if incomingContacts %}
 	<div class="box">
-		<h4 class="title">Contacts Requests</h4>
+		<h4 class="title">Requests</h4>
 		{% for incomingContact in incomingContacts %}
 		<div class="box alerted" >
 			<span class="inline_functions">
@@ -27,7 +27,7 @@
 				</button>
 				<button type="submit" name="decline" value="{{ incomingContact.key }}">
 					Decline
-				</button><span class="badge rightbadge">?</span></span>
+				</button><span class="badge rightbadge">&#63;</span></span>
 			{{ incomingContact.email }}
 		</div>
 		{% endfor %}
@@ -35,7 +35,7 @@
 	{% endif %}
 	{% if confirmedContacts %}
 	<div class="box">
-		<h4 class="title">Confirmed Contacts</h4>
+		<h4 class="title">Contacts</h4>
 		{% for confirmedContact in confirmedContacts %}
 		<div class="box" >
 			<span class="inline_functions">
@@ -49,7 +49,7 @@
 	{% endif %}
 	{% if outgoingContacts %}
 	<div class="box">
-		<h4 class="title faded">Pending Contacts</h4>
+		<h4 class="title faded">Pending</h4>
 		{% for outgoingContact in outgoingContacts %}
 		<div class="box" >
 			<span class="inline_functions">

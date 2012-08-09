@@ -27,6 +27,10 @@ class Event(db.Model):
     title = db.TextProperty()
     description = db.TextProperty()
     invitation = db.TextProperty()
+    minCapacity = db.IntegerProperty()
+    maxCapacity = db.IntegerProperty()
+    couldAttend = db.ListProperty(db.Key)
+    willAttend = db.ListProperty(db.Key)
 
 class Date(db.Model):
     date = db.DateTimeProperty()
@@ -81,7 +85,7 @@ def base_dictionary(self):
          dictionary['log_in_or_out_text'] = 'login'
     return dictionary
 
-def return_contact_for_email(email):
+def return_contact_for_email(self, email):
     if email:
         email = email.lower()
         que = db.Query(Contact)
@@ -99,8 +103,7 @@ def return_contact_for_email(email):
 def return_current_contact(self):
     if (users.get_current_user()):
         id = users.get_current_user().user_id();
-        email = users.get_current_user().email();
-        email = email.lower()
+        email = (users.get_current_user().email()).lower();
         if id:
             que = db.Query(Contact)
             que.filter('id =', id)
@@ -123,21 +126,44 @@ def return_current_contact(self):
                 new_contact = Contact(email=email, id=id)
                 new_contact.put()
                 return new_contact
+
+def return_contact(self, key):
+    if key:
+       return db.get(key)
+
+def return_events_for_contact(self, key):
+    if key:
+        que = db.Query(Event)
+        que.ancestor(key)
+        events_s = que.fetch(limit=None)
+        if len(events_s):
+            return events_s
         
 def return_current_contacts_events(self):
     contact = return_current_contact(self)
     if contact:
-        que = db.Query(Event)
-        que.ancestor(contact.key())
-        events_s = que.fetch(limit=None)
-        if len(events_s):
-            return events_s
+        return return_events_for_contact(self, contact.key())
+
+def return_all_contact_and_contacts_events(self):
+    events = []
+    contact = return_current_contact(self)
+    if contact:
+        event_s = return_events_for_contact(self, contact.key())
+        if event_s:
+            events = events + event_s
+        if contact.confirmedContacts:
+            for confirmedContact in contact.confirmedContacts:
+                events_s = return_events_for_contact(self, confirmedContact)
+                if events_s:
+                    events = events + events_s
+        return events
+        
         
 class MainPage(webapp2.RequestHandler):
     def get(self):
         template_values = { }
         template_values = dict(template_values.items() + base_dictionary(self).items())
-        events = return_current_contacts_events(self)
+        events = return_all_contact_and_contacts_events(self)
         datesandevents = []
         if events:
             for event in events:
@@ -174,7 +200,6 @@ class AdminPage(webapp2.RequestHandler):
 class ManageEventsPage(webapp2.RequestHandler):
     def get(self):
         template_values = { }
-        
         template_values = dict(template_values.items() + base_dictionary(self).items())
         events = return_current_contacts_events(self)
         eventsanddates = []
@@ -340,7 +365,7 @@ class AddContactsPage(webapp2.RequestHandler):
             emaillist = emails.split();
             requestor = return_current_contact(self);
             for email in emaillist:
-                invitee = return_contact_for_email(email)
+                invitee = return_contact_for_email(self, email)
                 if requestor.key() != invitee.key():
                     if not invitee.key() in requestor.confirmedContacts:
                         if not invitee.key() in requestor.incomingContacts:
