@@ -137,6 +137,10 @@ label {
 	font-size: 15px;
 }
 
+label.capacity {
+	display: inline-block;
+}
+
 div.box .field {
 	width: 100%;
 	margin-bottom: 10px;
@@ -164,6 +168,7 @@ div.box {
 	box-shadow: 10px 0px 10px #8f807d;
 	border-top-right-radius: 10px;
 	border-bottom-right-radius: 10px;
+	position: relative;
 }
 
 div.alerted {

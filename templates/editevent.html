@@ -1,12 +1,19 @@
-{% block editevent %} <script src="../static/datetimepicker_css.js"></script>
+{% block editevent %} <script src="../static/datetimepicker_css.js" type="text/javascript"></script>
+<script src="../static/javascript_form/gen_validatorv4.js" type="text/javascript"></script>
 <div class="box" >
-	<form method="post" >
+	<form method="post" id="myform">
 		<label for="title">Event Title</label>
-		<input class="field" type="text" name="title" required="required" value="{% if event %}{{ event.title }}{% endif %}">
+		<input class="field" type="text" name="title" value="{% if event %}{{ event.title }}{% endif %}">
 		<label for="description">Description</label>
 		<textarea class="field" name="description" >{% if event %}{{ event.description }}{% endif %}</textarea>
 		<label for="invitation">Ticket</label>
 		<textarea class="field" name="invitation" >{% if event %}{{ event.invitation }}{% endif %}</textarea>
+		<label for="minCapacity" class="capacity">Capacity from</label>
+		<input type="text" class="capacity" name="minCapacity" maxlength="3" size="3"/ value="" >
+		<label for="maxCapacity" class="capacity">to</label>
+		<input type="text" name="maxCapacity" class="capacity" maxlength="3" size="3"/ value="" >
+		<br>
+		<br>
 		<div class="datelist">
 			<div class="box" >
 				<span class="inline_functions" >
@@ -37,5 +44,15 @@
 			</button>
 		</div>
 	</form>
+	<script  type="text/javascript">
+		var frmvalidator = new Validator("myform");
+		frmvalidator.EnableMsgsTogether();
+		frmvalidator.addValidation("title", "req", "Enter an Event Title");
+		frmvalidator.addValidation("minCapacity", "numeric", "Enter a number for the Minimum Capacity (or leave it blank)");
+		frmvalidator.addValidation("maxCapacity", "numeric", "Enter a number for the Maximum Capacity (or leave it blank)");
+		frmvalidator.addValidation("minCapacity", "gt=0", "The Minimum Capacity must be greater than 0 (or leave it blank)");
+		frmvalidator.addValidation("maxCapacity", "gt=0", "The Maximum Capacity must be greater than 0 (or leave it blank)");
+		frmvalidator.addValidation("minCapacity", "leelmnt=maxCapacity", "The Minimum Capacity must be less than the Maximum Capacity");
+	</script>
 </div>
 {% endblock %}

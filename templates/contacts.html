@@ -22,10 +22,10 @@
 		{% for incomingContact in incomingContacts %}
 		<div class="box alerted" >
 			<span class="inline_functions">
-				<button type="submit" name="accept" value="{{ incomingContact.key }}">
+				<button class="inline_functions" type="submit" name="accept" value="{{ incomingContact.key }}">
 					Accept
 				</button>
-				<button type="submit" name="decline" value="{{ incomingContact.key }}">
+				<button class="inline_functions" type="submit" name="decline" value="{{ incomingContact.key }}">
 					Decline
 				</button><span class="badge rightbadge">&#63;</span></span>
 			{{ incomingContact.email }}
@@ -39,7 +39,7 @@
 		{% for confirmedContact in confirmedContacts %}
 		<div class="box" >
 			<span class="inline_functions">
-				<button type="submit" name="remove" value="{{ confirmedContact.key }}">
+				<button class="inline_functions" type="submit" name="remove" value="{{ confirmedContact.key }}">
 					Remove
 				</button> </span>
 			{{ confirmedContact.email }}
@@ -53,7 +53,7 @@
 		{% for outgoingContact in outgoingContacts %}
 		<div class="box" >
 			<span class="inline_functions">
-				<button type="submit" name="cancel" value="{{ outgoingContact.key }}">
+				<button class="inline_functions" type="submit" name="cancel" value="{{ outgoingContact.key }}">
 					Cancel
 				</button> </span>
 			<div class="faded">

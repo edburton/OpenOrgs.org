@@ -29,6 +29,7 @@ class Event(db.Model):
     invitation = db.TextProperty()
     minCapacity = db.IntegerProperty()
     maxCapacity = db.IntegerProperty()
+    confirmed = db.BooleanProperty()
     couldAttend = db.ListProperty(db.Key)
     willAttend = db.ListProperty(db.Key)
 
