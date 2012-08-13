@@ -176,7 +176,7 @@ class MainPage(webapp2.RequestHandler):
                     dateandevent = DateAndEvent(date, event)
                     datesandevents.append(dateandevent)
             template_values['datesandevents'] = sorted(datesandevents, key=lambda d: d.date.date)
-        temp = os.path.join(os.path.dirname(__file__), 'templates/index.html')
+        temp = os.path.join(os.path.dirname(__file__), 'templates/events.html')
         outstr = template.render(temp, template_values)
         self.response.out.write(outstr)
 

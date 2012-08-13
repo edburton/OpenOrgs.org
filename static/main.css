@@ -2,10 +2,11 @@ body {
 	font-family: 'Open Sans', sans-serif;
 	background-color: #FFFFFF;
 	color: #363639;
-	padding: 50px 50px 50px 50px;
+	padding: 40px 0px 0px 40px;
 	margin-left: auto;
 	margin-right: auto;
-	max-width: 600px;
+	width: 66%;
+	max-width: 800px;
 }
 
 h1, h2, h3, h4, h5 {
@@ -217,10 +218,10 @@ img.datepicker {
 span.inline_functions {
 	float: right;
 	position: relative;
-}
-
-button.inline_functions {
-	margin-left: 5px;
+	border-style: dotted;
+	border-width: 0px 0px 0px 1px;
+	border-color: #363639;
+	padding: 0px 0px 0px 5px;
 }
 
 .inline_functions {
@@ -256,14 +257,13 @@ ul.inline_functions, li.inline_functions, button.inline_functions {
 	background: -webkit-radial-gradient( 5px -9px, circle, white 8%, red 26px );
 	background-color: red;
 	border: 2px solid white;
-	border-radius: 12px; /* one half of ( (border * 2) + height + padding ) */
+	border-radius: 20px; /* one half of ( (border * 2) + height + padding ) */
 	box-shadow: 10px 0px 10px red;
 	color: white;
-	font: bold 15px/13px 'Open Sans', sans-serif;
-	height: 16px;
-	padding: 4px 3px 0 3px;
+	font: bold 15px 'Open Sans', sans-serif;
+	padding: 0 0 0 0;
 	text-align: center;
-	min-width: 14px;
+	min-width: 20px;
 	position: relative;
 	display: inline-block;
 	position: absolute;
@@ -275,7 +275,6 @@ ul.inline_functions, li.inline_functions, button.inline_functions {
 }
 
 .rightbadge {
-	right: -width;
 	top: -2px;
 	left: auto;
 }
@@ -286,4 +285,27 @@ ul.inline_functions, li.inline_functions, button.inline_functions {
 
 .notfaded {
 	opacity: 1;
+}
+
+.leftbadge {
+	background: radial-gradient( 5px -9px, circle, white 8%, red 26px );
+	background: -moz-radial-gradient( 5px -9px, circle, white 8%, red 26px );
+	background: -ms-radial-gradient( 5px -9px, circle, white 8%, red 26px );
+	background: -o-radial-gradient( 5px -9px, circle, white 8%, red 26px );
+	background: -webkit-radial-gradient( 5px -9px, circle, white 8%, red 26px );
+	background-color: red;
+	border: 2px solid white;
+	border-radius: 20px; /* one half of ( (border * 2) + height + padding ) */
+	box-shadow: 10px 0px 10px red;
+	color: white;
+	font: italic 12px 'Open Sans', sans-serif;
+	padding: 0 5px 0 5px;
+	text-align: center;
+	min-width: 20px;
+	position: relative;
+	display: inline-block;
+	position: absolute;
+	float: left;
+	right: 100%;
+	direction: rtl;
 }
