@@ -172,10 +172,6 @@ div.box {
 	position: relative;
 }
 
-div.alerted {
-	box-shadow: 10px 0px 10px red;
-}
-
 div.datelist {
 	margin-top: 10px;
 	margin-bottom: 0px;
