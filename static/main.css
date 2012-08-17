@@ -221,7 +221,7 @@ span.inline_functions {
 	border-style: dotted;
 	border-width: 0px 0px 0px 1px;
 	border-color: #363639;
-	padding: 0px 0px 0px 5px;
+	padding: 0px 5px 0px 5px;
 }
 
 .inline_functions {
@@ -249,7 +249,6 @@ ul.inline_functions, li.inline_functions, button.inline_functions {
 }
 
 .badge {
-	z-index: 100;
 	background: radial-gradient( 5px -9px, circle, white 8%, red 26px );
 	background: -moz-radial-gradient( 5px -9px, circle, white 8%, red 26px );
 	background: -ms-radial-gradient( 5px -9px, circle, white 8%, red 26px );
@@ -257,15 +256,11 @@ ul.inline_functions, li.inline_functions, button.inline_functions {
 	background: -webkit-radial-gradient( 5px -9px, circle, white 8%, red 26px );
 	background-color: red;
 	border: 2px solid white;
-	border-radius: 20px; /* one half of ( (border * 2) + height + padding ) */
+	border-radius: 10px;
 	box-shadow: 10px 0px 10px red;
 	color: white;
-	font: bold 15px 'Open Sans', sans-serif;
-	padding: 0 0 0 0;
-	text-align: center;
-	min-width: 20px;
-	position: relative;
-	display: inline-block;
+	font: bold 11px 'Open Sans', sans-serif;
+	padding: 0 5px 0 5px;
 	position: absolute;
 }
 
@@ -275,8 +270,8 @@ ul.inline_functions, li.inline_functions, button.inline_functions {
 }
 
 .rightbadge {
-	top: -2px;
-	left: auto;
+	top: -10px;
+	right: -13px;
 }
 
 .faded {
@@ -288,24 +283,17 @@ ul.inline_functions, li.inline_functions, button.inline_functions {
 }
 
 .leftbadge {
-	background: radial-gradient( 5px -9px, circle, white 8%, red 26px );
-	background: -moz-radial-gradient( 5px -9px, circle, white 8%, red 26px );
-	background: -ms-radial-gradient( 5px -9px, circle, white 8%, red 26px );
-	background: -o-radial-gradient( 5px -9px, circle, white 8%, red 26px );
-	background: -webkit-radial-gradient( 5px -9px, circle, white 8%, red 26px );
-	background-color: red;
-	border: 2px solid white;
-	border-radius: 20px; /* one half of ( (border * 2) + height + padding ) */
-	box-shadow: 10px 0px 10px red;
-	color: white;
-	font: italic 12px 'Open Sans', sans-serif;
-	padding: 0 5px 0 5px;
-	text-align: center;
-	min-width: 20px;
-	position: relative;
-	display: inline-block;
-	position: absolute;
 	float: left;
 	right: 100%;
-	direction: rtl;
+	top: 0px;
+}
+
+.invitation {
+	background: radial-gradient( 5px -9px, circle, white 8%, orange 26px );
+	background: -moz-radial-gradient( 5px -9px, circle, white 8%, orange 26px );
+	background: -ms-radial-gradient( 5px -9px, circle, white 8%, orange 26px );
+	background: -o-radial-gradient( 5px -9px, circle, white 8%, orange 26px );
+	background: -webkit-radial-gradient( 5px -9px, circle, white 8%, orange 26px );
+	background-color: orange;
+	box-shadow: 10px 0px 10px orange;
 }
