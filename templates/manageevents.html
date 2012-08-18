@@ -18,17 +18,17 @@
 </ul>
 {% endblock %}
 {% block content %}
-{% if eventsanddates|length %}
+{% if eventsdates|length %}
 <form method="post">
-	{% for eventanddates in eventsanddates %}
+	{% for eventdates in eventsdates %}
 	<div class="box" >
 		<div id="event">
-			<h4 class="title">{{ eventanddates.event.title }}</h4>
+			<h4 class="title">{{ eventdates.event.title }}</h4>
 			<p id="description">
-				{% autoescape off %}{{ eventanddates.event.description|linebreaksbr }}{% endautoescape %}
+				{% autoescape off %}{{ eventdates.event.description|linebreaksbr }}{% endautoescape %}
 			</p>
 			<div class="datelist">
-				{% for date in eventanddates.dates %}
+				{% for date in eventdates.dates %}
 				<div class="box" >
 					<div class="date">
 						{{ date.date }}
@@ -37,10 +37,10 @@
 				{% endfor %}
 			</div>
 			<div id="functions" >
-				<button type="submit" name="edit" value="{{ eventanddates.event.key }}">
+				<button type="submit" name="edit" value="{{ eventdates.event.key }}">
 					Edit
 				</button>
-				<button type="submit" name="delete" value="{{ eventanddates.event.key }}">
+				<button type="submit" name="delete" value="{{ eventdates.event.key }}">
 					Delete
 				</button>
 			</div>

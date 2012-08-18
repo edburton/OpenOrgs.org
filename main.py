@@ -39,15 +39,25 @@ class Date(db.Model):
 ################CONTROLLER########################### 
 
 
-class EventAndDates:
+class EventDates:
     def __init__(self, event, dates):
         self.event = event
         self.dates = dates
+        
+class EventDateState:
+    def __init__(self, event, date, state):
+        self.event = event
+        self.date = date
+        self.state = state
+        
+class DateState:
+    suggestion = 'suggestion'
+    invitation = 'invitation'
+    ticket = 'ticket'
+    unconfirmed = 'unconfirmed'
+    confirmed = 'confirmed'
+    
 
-class DateAndEvent:
-    def __init__(self, date, event):
-        self.date = date 
-        self.event = event 
 
 class BaseHandler(webapp2.RequestHandler):
     def dispatch(self):
@@ -145,37 +155,49 @@ def return_current_contacts_events(self):
     if contact:
         return return_events_for_contact(self, contact.key())
 
-def return_all_contact_and_contacts_events(self):
-    events = []
+def return_all_contact_and_contacts_eventdatestates(self):
+    eventdatestates = []
     contact = return_current_contact(self)
     if contact:
         event_s = return_events_for_contact(self, contact.key())
         if event_s:
-            events = events + event_s
+            for event in event_s:
+                que = db.Query(Date)
+                que.ancestor(event.key())
+                dates = que.fetch(limit=None)
+                for date in dates:
+                    state = DateState.unconfirmed
+                    if date.confirmed:
+                        state = DateSate.confirmed
+                    eventdatestate = EventDateState(event, date, state)
+                    eventdatestates.append(eventdatestate)           
         if contact.confirmedContacts:
             for confirmedContact in contact.confirmedContacts:
-                events_s = return_events_for_contact(self, confirmedContact)
-                if events_s:
-                    events = events + events_s
-        return events
+                event_s = return_events_for_contact(self, confirmedContact)
+                if event_s:
+                    for event in event_s:
+                        que = db.Query(Date)
+                        que.ancestor(event.key())
+                        dates = que.fetch(limit=None)
+                        for date in dates:
+                            state = DateState.suggestion
+                            if date.confirmed:
+                                if contact.key() in date.willAttend:
+                                    state = DateState.ticket
+                                else:
+                                    state = DateState.invitation
+                            eventdatestates.append(EventDateState(event, date, state)) 
+    return eventdatestates
         
+    
         
 class MainPage(webapp2.RequestHandler):
     def get(self):
         template_values = { }
         template_values = dict(template_values.items() + base_dictionary(self).items())
-        events = return_all_contact_and_contacts_events(self)
-        datesandevents = []
-        if events:
-            for event in events:
-                que = db.Query(Date)
-                que.ancestor(event.key())
-                que.order('date')
-                dates = que.fetch(limit=None)
-                for date in dates:
-                    dateandevent = DateAndEvent(date, event)
-                    datesandevents.append(dateandevent)
-            template_values['datesandevents'] = sorted(datesandevents, key=lambda d: d.date.date)
+        eventdatestates = return_all_contact_and_contacts_eventdatestates(self)
+        if eventdatestates:
+            template_values['eventdatestates'] = sorted(eventdatestates, key=lambda d: d.date.date)
         temp = os.path.join(os.path.dirname(__file__), 'templates/events.html')
         outstr = template.render(temp, template_values)
         self.response.out.write(outstr)
@@ -203,16 +225,16 @@ class ManageEventsPage(webapp2.RequestHandler):
         template_values = { }
         template_values = dict(template_values.items() + base_dictionary(self).items())
         events = return_current_contacts_events(self)
-        eventsanddates = []
+        eventsdates = []
         if events:
             for event in events:
                 que = db.Query(Date)
                 que.ancestor(event.key())
                 que.order('date')
                 dates = que.fetch(limit=None)
-                eventanddate = EventAndDates(event, dates)
-                eventsanddates.append(eventanddate)
-            template_values['eventsanddates'] = eventsanddates;
+                eventdates = EventDates(event, dates)
+                eventsdates.append(eventdates)
+            template_values['eventsdates'] = eventsdates;
                 
         temp = os.path.join(os.path.dirname(__file__), 'templates/manageevents.html')
         outstr = template.render(temp, template_values)

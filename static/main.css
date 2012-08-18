@@ -293,3 +293,33 @@ ul.inline_functions, li.inline_functions, button.inline_functions {
 	background-color: orange;
 	box-shadow: 10px 0px 10px orange;
 }
+
+.ticket {
+	background: radial-gradient( 5px -9px, circle, white 8%, green 26px );
+	background: -moz-radial-gradient( 5px -9px, circle, white 8%, green 26px );
+	background: -ms-radial-gradient( 5px -9px, circle, white 8%, green 26px );
+	background: -o-radial-gradient( 5px -9px, circle, white 8%, green 26px );
+	background: -webkit-radial-gradient( 5px -9px, circle, white 8%, green 26px );
+	background-color: green;
+	box-shadow: 10px 0px 10px green;
+}
+
+.unconfirmed {
+	background: radial-gradient( 5px -9px, circle, white 8%, orange 26px );
+	background: -moz-radial-gradient( 5px -9px, circle, white 8%, orange 26px );
+	background: -ms-radial-gradient( 5px -9px, circle, white 8%, orange 26px );
+	background: -o-radial-gradient( 5px -9px, circle, white 8%, orange 26px );
+	background: -webkit-radial-gradient( 5px -9px, circle, white 8%, orange 26px );
+	background-color: orange;
+	box-shadow: 10px 0px 10px orange;
+}
+
+.confirmed {
+	background: radial-gradient( 5px -9px, circle, white 8%, green 26px );
+	background: -moz-radial-gradient( 5px -9px, circle, white 8%, green 26px );
+	background: -ms-radial-gradient( 5px -9px, circle, white 8%, green 26px );
+	background: -o-radial-gradient( 5px -9px, circle, white 8%, green 26px );
+	background: -webkit-radial-gradient( 5px -9px, circle, white 8%, green 26px );
+	background-color: green;
+	box-shadow: 10px 0px 10px green;
+}

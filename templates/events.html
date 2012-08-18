@@ -18,29 +18,30 @@
 </ul>
 {% endblock %}
 {% block content %}
-{% if datesandevents %}
-{% for datesandevent in datesandevents %}
+{% if eventdatestates %}
+{% for eventdatestate in eventdatestates %}
 <div class="box">
 	<div class="date">
 		<span class="inline_functions">Available?
 			<ul class="inline_functions">
 				<li class="inline_functions">
-					<input name="{{ datesandevent.date.key }}" type="radio" />
+					<input name="{{ eventdatestate.date.key }}" type="radio" />
 					Yes
 				</li>
 				<li class="inline_functions">
-					<input name="{{ datesandevent.date.key }}" type="radio" />
+					<input name="{{ eventdatestate.date.key }}" type="radio" />
 					No
 				</li>
 				<li class="inline_functions">
 					<button class="inline_functions" type="submit" name="dismiss" value="{{ datesandevent.date.key }}">
 						Dismiss
-					</button><span class="badge rightbadge">&#63;</span>
+					</button>
+					{% if eventdatestate.state == "suggestion" or eventdatestate.state == "invitation" %}<span class="badge rightbadge">&#63;</span>{% endif %}
 				</li>
 			</ul> </span>
-		<span class="badge leftbadge">suggestion</span>
-		{{ datesandevent.date.date }}
-		<span class="note">{{ datesandevent.event.title }}</span>
+		<span class="badge leftbadge {{ eventdatestate.state }}">{{ eventdatestate.state }}</span>
+		{{ eventdatestate.date.date }}
+		<span class="note">{{ eventdatestate.event.title }}</span>
 	</div>
 </div>
 {% endfor %}
