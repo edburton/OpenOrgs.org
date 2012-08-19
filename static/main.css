@@ -217,10 +217,10 @@ span.inline_functions {
 	border-style: dotted;
 	border-width: 0px 0px 0px 1px;
 	border-color: #363639;
-	padding: 0px 5px 0px 5px;
+	padding: 0px 0px 0px 5px;
 }
 
-.inline_functions {
+.inline_functions, label.inline_functions {
 	padding: 0px;
 	margin: 0px;
 	font-size: 11px;
@@ -232,7 +232,7 @@ form {
 	margin: 0px;
 }
 
-ul.inline_functions, li.inline_functions, button.inline_functions {
+ul.inline_functions, li.inline_functions, button.inline_functions, label.inline_functions {
 	list-style: none;
 	display: inline;
 }
@@ -245,15 +245,10 @@ ul.inline_functions, li.inline_functions, button.inline_functions {
 }
 
 .badge {
-	background: radial-gradient( 5px -9px, circle, white 8%, red 26px );
-	background: -moz-radial-gradient( 5px -9px, circle, white 8%, red 26px );
-	background: -ms-radial-gradient( 5px -9px, circle, white 8%, red 26px );
-	background: -o-radial-gradient( 5px -9px, circle, white 8%, red 26px );
-	background: -webkit-radial-gradient( 5px -9px, circle, white 8%, red 26px );
 	background-color: red;
 	border: 2px solid white;
-	border-radius: 10px;
-	box-shadow: 10px 0px 10px red;
+	border-radius: 20px;
+	box-shadow: 10px 0px 10px #8f807d;
 	color: white;
 	font: bold 11px 'Open Sans', sans-serif;
 	padding: 0 5px 0 5px;
@@ -282,44 +277,22 @@ ul.inline_functions, li.inline_functions, button.inline_functions {
 	float: left;
 	right: 100%;
 	top: 0px;
+	font: italic 11px 'Open Sans', sans-serif;
+	padding: 1px 4px 1px 4px;
 }
 
 .invitation {
-	background: radial-gradient( 5px -9px, circle, white 8%, orange 26px );
-	background: -moz-radial-gradient( 5px -9px, circle, white 8%, orange 26px );
-	background: -ms-radial-gradient( 5px -9px, circle, white 8%, orange 26px );
-	background: -o-radial-gradient( 5px -9px, circle, white 8%, orange 26px );
-	background: -webkit-radial-gradient( 5px -9px, circle, white 8%, orange 26px );
 	background-color: orange;
-	box-shadow: 10px 0px 10px orange;
 }
 
 .ticket {
-	background: radial-gradient( 5px -9px, circle, white 8%, green 26px );
-	background: -moz-radial-gradient( 5px -9px, circle, white 8%, green 26px );
-	background: -ms-radial-gradient( 5px -9px, circle, white 8%, green 26px );
-	background: -o-radial-gradient( 5px -9px, circle, white 8%, green 26px );
-	background: -webkit-radial-gradient( 5px -9px, circle, white 8%, green 26px );
 	background-color: green;
-	box-shadow: 10px 0px 10px green;
 }
 
 .unconfirmed {
-	background: radial-gradient( 5px -9px, circle, white 8%, orange 26px );
-	background: -moz-radial-gradient( 5px -9px, circle, white 8%, orange 26px );
-	background: -ms-radial-gradient( 5px -9px, circle, white 8%, orange 26px );
-	background: -o-radial-gradient( 5px -9px, circle, white 8%, orange 26px );
-	background: -webkit-radial-gradient( 5px -9px, circle, white 8%, orange 26px );
 	background-color: orange;
-	box-shadow: 10px 0px 10px orange;
 }
 
 .confirmed {
-	background: radial-gradient( 5px -9px, circle, white 8%, green 26px );
-	background: -moz-radial-gradient( 5px -9px, circle, white 8%, green 26px );
-	background: -ms-radial-gradient( 5px -9px, circle, white 8%, green 26px );
-	background: -o-radial-gradient( 5px -9px, circle, white 8%, green 26px );
-	background: -webkit-radial-gradient( 5px -9px, circle, white 8%, green 26px );
 	background-color: green;
-	box-shadow: 10px 0px 10px green;
 }

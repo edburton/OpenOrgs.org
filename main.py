@@ -27,6 +27,7 @@ class Event(db.Model):
     title = db.TextProperty()
     description = db.TextProperty()
     invitation = db.TextProperty()
+    ticket = db.TextProperty()
     minCapacity = db.IntegerProperty()
     maxCapacity = db.IntegerProperty()
 
@@ -201,7 +202,9 @@ class MainPage(webapp2.RequestHandler):
         temp = os.path.join(os.path.dirname(__file__), 'templates/events.html')
         outstr = template.render(temp, template_values)
         self.response.out.write(outstr)
-
+    def post(self):
+        self.redirect("/")
+        
 class LoginPage(webapp2.RequestHandler):
     def get(self):
         template_values = { }

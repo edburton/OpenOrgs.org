@@ -3,15 +3,17 @@
 <div class="box" >
 	<form method="post" id="myform">
 		<label for="title">Event Title</label>
-		<input class="field" type="text" name="title" value="{% if event %}{{ event.title }}{% endif %}">
+		<input class="field" type="text" name="title" id="title" value="{% if event %}{{ event.title }}{% endif %}">
 		<label for="description">Description</label>
-		<textarea class="field" name="description" >{% if event %}{{ event.description }}{% endif %}</textarea>
-		<label for="invitation">Ticket</label>
-		<textarea class="field" name="invitation" >{% if event %}{{ event.invitation }}{% endif %}</textarea>
+		<textarea class="field" name="description" id="description" >{% if event %}{{ event.description }}{% endif %}</textarea>
+		<label for="invitation">Invitation</label>
+		<textarea class="field" name="invitation" id="invitation">{% if event %}{{ event.invitation }}{% endif %}</textarea>
+		<label for="ticket">Ticket</label>
+		<textarea class="field" name="ticket" id="ticket" >{% if event %}{{ event.ticket }}{% endif %}</textarea>
 		<label for="minCapacity" class="capacity">Capacity from</label>
-		<input type="text" class="capacity" name="minCapacity" maxlength="3" size="3"/ value="" >
+		<input type="text" class="capacity" name="minCapacity" id="minCapacity" maxlength="3" size="3"/ value="" >
 		<label for="maxCapacity" class="capacity">to</label>
-		<input type="text" name="maxCapacity" class="capacity" maxlength="3" size="3"/ value="" >
+		<input type="text" name="maxCapacity" id="maxCapacity" class="capacity" maxlength="3" size="3"/ value="" >
 		<br>
 		<br>
 		<div class="datelist">

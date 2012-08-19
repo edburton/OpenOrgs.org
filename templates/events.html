@@ -19,32 +19,45 @@
 {% endblock %}
 {% block content %}
 {% if eventdatestates %}
-{% for eventdatestate in eventdatestates %}
-<div class="box">
-	<div class="date">
-		<span class="inline_functions">Available?
-			<ul class="inline_functions">
-				<li class="inline_functions">
-					<input name="{{ eventdatestate.date.key }}" type="radio" />
-					Yes
-				</li>
-				<li class="inline_functions">
-					<input name="{{ eventdatestate.date.key }}" type="radio" />
-					No
-				</li>
-				<li class="inline_functions">
-					<button class="inline_functions" type="submit" name="dismiss" value="{{ datesandevent.date.key }}">
-						Dismiss
-					</button>
-					{% if eventdatestate.state == "suggestion" or eventdatestate.state == "invitation" %}<span class="badge rightbadge">&#63;</span>{% endif %}
-				</li>
-			</ul> </span>
-		<span class="badge leftbadge {{ eventdatestate.state }}">{{ eventdatestate.state }}</span>
-		{{ eventdatestate.date.date }}
-		<span class="note">{{ eventdatestate.event.title }}</span>
+<form method="post">
+	{% for eventdatestate in eventdatestates %}
+	<div class="box">
+		<div class="date">
+			{% if eventdatestate.state == "suggestion" %}
+			<span class="inline_functions">
+				<ul class="inline_functions">
+					<li class="inline_functions">
+						<input id = "unavailable" name = "unavailable" value="{{ eventdatestate.date.key }}" type="radio"  onclick="this.form.submit();"/>
+						<label class="inline_functions" for="unavailable">Unavailable</label>
+					</li>
+					<li class="inline_functions">
+						<input id = "available" name = "available" value="{{ eventdatestate.date.key }}" type="radio"  onclick="this.form.submit();"/>
+						<label class="inline_functions" for="available">Available</label>
+					</li>
+
+				</ul><span class="badge rightbadge">&#63;</span></span>{% endif %}
+			{% if eventdatestate.state == "unconfirmed" %}
+			<span class="inline_functions">
+				<ul class="inline_functions">
+					<li class="inline_functions">
+						<button class="inline_functions" type="submit" name="confirm" value="{{ datesandevent.date.key }}">
+							Confirm
+						</button>
+					</li>
+					<li class="inline_functions">
+						<button class="inline_functions" type="submit" name="remove" value="{{ datesandevent.date.key }}">
+							Remove
+						</button>
+					</li>
+				</ul> </span>{% endif %}
+
+			<span class="badge leftbadge {{ eventdatestate.state }}">{{ eventdatestate.state }}</span>
+			{{ eventdatestate.date.date }}
+			<span class="note">{{ eventdatestate.event.title }}</span>
+		</div>
 	</div>
-</div>
-{% endfor %}
+	{% endfor %}
+</ form>
 {% else %}
 <div class="box">
 	You have no upcoming Event Dates
