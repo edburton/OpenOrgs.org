@@ -2,7 +2,7 @@
 {% block navigation %}
 <ul id="navigation">
 	<li>
-		<a class="there" href="/">Events</a>
+		<a class="there" href="/">Events{% if event_alerts %}<span class="badge topbadge">{{ event_alerts }}</span>{% endif %}</a>
 	</li>
 	<li>
 		<a class="here" href="/contacts">Contacts{% if contact_requests %}<span class="badge topbadge">{{ contact_requests }}</span>{% endif %}</a>

@@ -7,10 +7,12 @@ import os
 import logging
 import time
 import calendar
+import pickle
 
 from google.appengine.ext import db
 from google.appengine.api import users
 from google.appengine.ext.webapp import template
+from google.appengine.api import memcache
 from webapp2_extras import sessions
 
 ######################MODEL##########################
@@ -36,6 +38,14 @@ class Date(db.Model):
     confirmed = db.BooleanProperty()
     couldAttend = db.ListProperty(db.Key)
     willAttend = db.ListProperty(db.Key)
+
+class Dictionary(db.Model):
+    entries = db.ListProperty(db.Key)
+    
+class DictionaryEntry(db.Model):
+    name = db.StringProperty();
+    value = db.TextProperty()
+    
     
 ################CONTROLLER########################### 
 
@@ -46,10 +56,11 @@ class EventDates:
         self.dates = dates
         
 class EventDateState:
-    def __init__(self, event, date, state):
+    def __init__(self, event, date, state, chosen=False):
         self.event = event
         self.date = date
         self.state = state
+        self.chosen = chosen
         
 class DateState:
     suggestion = 'suggestion'
@@ -77,19 +88,26 @@ class BaseHandler(webapp2.RequestHandler):
         # Returns a session using the default cookie key.
         return self.session_store.get_session() 
 
-
 def base_dictionary(self):
     dictionary = { }
     dictionary['site_name'] = self.app.config.get('site_name')
     dictionary['site_slogan'] = self.app.config.get('site_slogan')
-    if users.get_current_user():
+    user = users.get_current_user()
+    if user:
         dictionary['log_in_or_out_url'] = users.create_logout_url(self.request.uri)
         dictionary['log_in_or_out_text'] = 'logout'
-        dictionary['user_email'] = (users.get_current_user().email()).lower()
+        dictionary['user_email'] = (user.email()).lower()
         if users.is_current_user_admin():
             dictionary['admin'] = 'true'
         contact = return_current_contact(self)
         requests = len(contact.incomingContacts);
+        eventdatestates = return_all_contact_and_contacts_eventdatestates(self)
+        event_alerts = 0;
+        for eventdatestate in eventdatestates:
+            if eventdatestate.state == DateState.suggestion:
+                event_alerts = event_alerts + 1
+        if event_alerts > 0:
+            dictionary['event_alerts'] = event_alerts
         if requests:
             dictionary['contact_requests'] = requests
     else:
@@ -182,12 +200,18 @@ def return_all_contact_and_contacts_eventdatestates(self):
                         dates = que.fetch(limit=None)
                         for date in dates:
                             state = DateState.suggestion
+                            chosen = False
                             if date.confirmed:
                                 if contact.key() in date.willAttend:
                                     state = DateState.ticket
                                 else:
                                     state = DateState.invitation
-                            eventdatestates.append(EventDateState(event, date, state)) 
+                            else:
+                                if contact.key() in date.couldAttend:
+                                    chosen = True
+                                else:
+                                    chosen = False
+                            eventdatestates.append(EventDateState(event, date, state, chosen)) 
     return eventdatestates
         
     
@@ -199,17 +223,37 @@ class MainPage(webapp2.RequestHandler):
         eventdatestates = return_all_contact_and_contacts_eventdatestates(self)
         if eventdatestates:
             template_values['eventdatestates'] = sorted(eventdatestates, key=lambda d: d.date.date)
+            eventAlerts = 0;
+            for eventdatestate in eventdatestates:
+                if eventdatestate == DateState.suggestion:
+                    eventAlerts = eventAlerts + 1
         temp = os.path.join(os.path.dirname(__file__), 'templates/events.html')
         outstr = template.render(temp, template_values)
         self.response.out.write(outstr)
     def post(self):
         available = self.request.get('available')
         confirm = self.request.get('confirm')
-        logging.info("confirm="+confirm)
+        unconfirm = self.request.get('unconfirm')
         if confirm:
             date = db.get(confirm)
             date.confirmed = True;
             date.put()
+        if unconfirm:
+            date = db.get(unconfirm)
+            date.confirmed = False;
+            date.put()
+        eventdatestates = return_all_contact_and_contacts_eventdatestates(self)
+        thisContact = return_current_contact(self)
+        for eventdatestate in eventdatestates:
+            name = str(eventdatestate.date.key()) + '_available'
+            value = self.request.get(name)
+            if value == 'available' and not (thisContact.key() in eventdatestate.date.couldAttend):
+                eventdatestate.date.couldAttend.append(thisContact.key())
+                eventdatestate.date.put()
+            elif value != 'available' and (thisContact.key() in eventdatestate.date.couldAttend):
+                eventdatestate.date.couldAttend.remove(thisContact.key())
+                eventdatestate.date.put()
+            logging.info(name + ' = ' + value)
         self.redirect("/")
         
 class LoginPage(webapp2.RequestHandler):

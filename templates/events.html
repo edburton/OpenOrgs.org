@@ -2,7 +2,7 @@
 {% block navigation %}
 <ul id="navigation">
 	<li>
-		<a class="here" href="/">Events</a>
+		<a class="here" href="/">Events{% if event_alerts %}<span class="badge topbadge">{{ event_alerts }}</span>{% endif %}</a>
 	</li>
 	<li>
 		<a class="there" href="/contacts">Contacts{% if contact_requests %}<span class="badge topbadge">{{ contact_requests }}</span>{% endif %}</a>
@@ -27,10 +27,13 @@
 			<span class="inline_functions">
 				<ul class="inline_functions">
 					<li class="inline_functions">
-						<input id = "{{ eventdatestate.date.key }}_available" name = "available" value="{{ eventdatestate.date.key }}" type="checkbox"  onclick="this.form.submit();"/>
+						<input id = "{{ eventdatestate.date.key }}_available" name = "{{ eventdatestate.date.key }}_available" value="available" type="radio"  onclick="this.form.submit();"/>
 						<label class="inline_functions" for="{{ eventdatestate.date.key }}_available">Available</label>
 					</li>
-
+					<li class="inline_functions">
+						<input id = "{{ eventdatestate.date.key }}_unavailable" name = "{{ eventdatestate.date.key }}_available" value="available" type="radio"  onclick="this.form.submit();"/>
+						<label class="inline_functions" for="{{ eventdatestate.date.key }}_unavailable">Unavailable</label>
+					</li>
 				</ul><span class="badge rightbadge">&#63;</span></span>{% endif %}
 			{% if eventdatestate.state == "unconfirmed" %}
 			<span class="inline_functions">
@@ -41,8 +44,15 @@
 						</button>
 					</li>
 				</ul> </span>{% endif %}
-
-			<span class="badge leftbadge {{ eventdatestate.state }}">{{ eventdatestate.state }}</span>
+			{% if eventdatestate.state == "confirmed" %}
+			<span class="inline_functions">
+				<ul class="inline_functions">
+					<li class="inline_functions">
+						<button class="inline_functions" type="submit" name="unconfirm" value="{{ eventdatestate.date.key }}">
+							Cancel
+						</button>
+					</li>
+				</ul> </span>{% endif %} <span class="badge leftbadge {{ eventdatestate.state }}">{{ eventdatestate.state }}</span>
 			{{ eventdatestate.date.date }}
 			<span class="note">{{ eventdatestate.event.title }}</span>
 		</div>
