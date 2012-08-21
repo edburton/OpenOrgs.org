@@ -27,12 +27,8 @@
 			<span class="inline_functions">
 				<ul class="inline_functions">
 					<li class="inline_functions">
-						<input id = "unavailable" name = "unavailable" value="{{ eventdatestate.date.key }}" type="radio"  onclick="this.form.submit();"/>
-						<label class="inline_functions" for="unavailable">Unavailable</label>
-					</li>
-					<li class="inline_functions">
-						<input id = "available" name = "available" value="{{ eventdatestate.date.key }}" type="radio"  onclick="this.form.submit();"/>
-						<label class="inline_functions" for="available">Available</label>
+						<input id = "{{ eventdatestate.date.key }}_available" name = "available" value="{{ eventdatestate.date.key }}" type="checkbox"  onclick="this.form.submit();"/>
+						<label class="inline_functions" for="{{ eventdatestate.date.key }}_available">Available</label>
 					</li>
 
 				</ul><span class="badge rightbadge">&#63;</span></span>{% endif %}
@@ -40,13 +36,8 @@
 			<span class="inline_functions">
 				<ul class="inline_functions">
 					<li class="inline_functions">
-						<button class="inline_functions" type="submit" name="confirm" value="{{ datesandevent.date.key }}">
+						<button class="inline_functions" type="submit" name="confirm" value="{{ eventdatestate.date.key }}">
 							Confirm
-						</button>
-					</li>
-					<li class="inline_functions">
-						<button class="inline_functions" type="submit" name="remove" value="{{ datesandevent.date.key }}">
-							Remove
 						</button>
 					</li>
 				</ul> </span>{% endif %}

@@ -169,7 +169,7 @@ def return_all_contact_and_contacts_eventdatestates(self):
                 for date in dates:
                     state = DateState.unconfirmed
                     if date.confirmed:
-                        state = DateSate.confirmed
+                        state = DateState.confirmed
                     eventdatestate = EventDateState(event, date, state)
                     eventdatestates.append(eventdatestate)           
         if contact.confirmedContacts:
@@ -203,6 +203,13 @@ class MainPage(webapp2.RequestHandler):
         outstr = template.render(temp, template_values)
         self.response.out.write(outstr)
     def post(self):
+        available = self.request.get('available')
+        confirm = self.request.get('confirm')
+        logging.info("confirm="+confirm)
+        if confirm:
+            date = db.get(confirm)
+            date.confirmed = True;
+            date.put()
         self.redirect("/")
         
 class LoginPage(webapp2.RequestHandler):
