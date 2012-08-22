@@ -27,23 +27,32 @@
 			<span class="inline_functions">
 				<ul class="inline_functions">
 					<li class="inline_functions">
-						<input id = "{{ eventdatestate.date.key }}_available" name = "{{ eventdatestate.date.key }}_available" value="available" type="radio"  onclick="this.form.submit();"/>
+						<input id = "{{ eventdatestate.date.key }}_available" name = "{{ eventdatestate.date.key }}_available" value="available" type="radio"  {% if eventdatestate.available == "available" %}checked="yes"{% endif %} onclick="this.form.submit();"/>
 						<label class="inline_functions" for="{{ eventdatestate.date.key }}_available">Available</label>
 					</li>
 					<li class="inline_functions">
-						<input id = "{{ eventdatestate.date.key }}_unavailable" name = "{{ eventdatestate.date.key }}_available" value="available" type="radio"  onclick="this.form.submit();"/>
+						<input id = "{{ eventdatestate.date.key }}_unavailable" name = "{{ eventdatestate.date.key }}_available" value="unavailable" type="radio" {% if eventdatestate.available == "unavailable" %}checked="yes"{% endif %}  onclick="this.form.submit();"/>
 						<label class="inline_functions" for="{{ eventdatestate.date.key }}_unavailable">Unavailable</label>
 					</li>
-				</ul><span class="badge rightbadge">&#63;</span></span>{% endif %}
-			{% if eventdatestate.state == "unconfirmed" %}
+				</ul>{% if eventdatestate.available == "unknown" %}<span class="badge rightbadge">&#63;</span>{% endif %}</span>{% endif %}
+			{% if eventdatestate.state == "invitation" %}
 			<span class="inline_functions">
 				<ul class="inline_functions">
 					<li class="inline_functions">
-						<button class="inline_functions" type="submit" name="confirm" value="{{ eventdatestate.date.key }}">
-							Confirm
+						<button class="inline_functions" type="submit" name="accept" value="{{ eventdatestate.date.key }}">
+							Accept
 						</button>
 					</li>
-				</ul> </span>{% endif %}
+				</ul><span class="badge rightbadge">&#63;</span></span>{% endif %}
+			{% if eventdatestate.state == "ticket" %}
+			<span class="inline_functions">
+				<ul class="inline_functions">
+					<li class="inline_functions">
+						<button class="inline_functions" type="submit" name="cancel" value="{{ eventdatestate.date.key }}">
+							Cancel
+						</button>
+					</li>
+				</ul></span>{% endif %}
 			{% if eventdatestate.state == "confirmed" %}
 			<span class="inline_functions">
 				<ul class="inline_functions">
@@ -52,7 +61,16 @@
 							Cancel
 						</button>
 					</li>
-				</ul> </span>{% endif %} <span class="badge leftbadge {{ eventdatestate.state }}">{{ eventdatestate.state }}</span>
+				</ul> </span>{% endif %}
+			{% if eventdatestate.state == "unconfirmed" %}
+			<span class="inline_functions">
+				<ul class="inline_functions">
+					<li class="inline_functions">
+						<button class="inline_functions" type="submit" name="confirm" value="{{ eventdatestate.date.key }}">
+							Confirm
+						</button>
+					</li>
+				</ul> </span>{% endif %} <span class="badge leftbadge {{ eventdatestate.state }}  {{ eventdatestate.alert }}">{{ eventdatestate.state }}</span>
 			{{ eventdatestate.date.date }}
 			<span class="note">{{ eventdatestate.event.title }}</span>
 		</div>

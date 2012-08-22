@@ -36,7 +36,8 @@ class Event(db.Model):
 class Date(db.Model):
     date = db.DateTimeProperty()
     confirmed = db.BooleanProperty()
-    couldAttend = db.ListProperty(db.Key)
+    cannotAttend = db.ListProperty(db.Key)
+    canAttend = db.ListProperty(db.Key)
     willAttend = db.ListProperty(db.Key)
 
 class Dictionary(db.Model):
@@ -56,11 +57,12 @@ class EventDates:
         self.dates = dates
         
 class EventDateState:
-    def __init__(self, event, date, state, chosen=False):
+    def __init__(self, event, date, state, available='unknown', alert='orange'):
         self.event = event
         self.date = date
         self.state = state
-        self.chosen = chosen
+        self.available = available
+        self.alert = alert
         
 class DateState:
     suggestion = 'suggestion'
@@ -104,7 +106,7 @@ def base_dictionary(self):
         eventdatestates = return_all_contact_and_contacts_eventdatestates(self)
         event_alerts = 0;
         for eventdatestate in eventdatestates:
-            if eventdatestate.state == DateState.suggestion:
+            if eventdatestate.alert == 'red':
                 event_alerts = event_alerts + 1
         if event_alerts > 0:
             dictionary['event_alerts'] = event_alerts
@@ -188,7 +190,7 @@ def return_all_contact_and_contacts_eventdatestates(self):
                     state = DateState.unconfirmed
                     if date.confirmed:
                         state = DateState.confirmed
-                    eventdatestate = EventDateState(event, date, state)
+                    eventdatestate = EventDateState(event, date, state, 'orange')
                     eventdatestates.append(eventdatestate)           
         if contact.confirmedContacts:
             for confirmedContact in contact.confirmedContacts:
@@ -200,18 +202,22 @@ def return_all_contact_and_contacts_eventdatestates(self):
                         dates = que.fetch(limit=None)
                         for date in dates:
                             state = DateState.suggestion
-                            chosen = False
+                            available = 'unknown'
+                            alert = 'red'
                             if date.confirmed:
                                 if contact.key() in date.willAttend:
                                     state = DateState.ticket
+                                    alert = 'green'
                                 else:
                                     state = DateState.invitation
                             else:
-                                if contact.key() in date.couldAttend:
-                                    chosen = True
-                                else:
-                                    chosen = False
-                            eventdatestates.append(EventDateState(event, date, state, chosen)) 
+                                if contact.key() in date.canAttend:
+                                    available = 'available'
+                                    alert = 'orange'
+                                if contact.key() in date.cannotAttend:
+                                    available = 'unavailable'
+                                    alert = 'orange'
+                            eventdatestates.append(EventDateState(event, date, state, available, alert)) 
     return eventdatestates
         
     
@@ -223,17 +229,16 @@ class MainPage(webapp2.RequestHandler):
         eventdatestates = return_all_contact_and_contacts_eventdatestates(self)
         if eventdatestates:
             template_values['eventdatestates'] = sorted(eventdatestates, key=lambda d: d.date.date)
-            eventAlerts = 0;
-            for eventdatestate in eventdatestates:
-                if eventdatestate == DateState.suggestion:
-                    eventAlerts = eventAlerts + 1
         temp = os.path.join(os.path.dirname(__file__), 'templates/events.html')
         outstr = template.render(temp, template_values)
         self.response.out.write(outstr)
     def post(self):
+        thisContact = return_current_contact(self)
         available = self.request.get('available')
         confirm = self.request.get('confirm')
         unconfirm = self.request.get('unconfirm')
+        accept = self.request.get('accept')
+        cancel = self.request.get('cancel')
         if confirm:
             date = db.get(confirm)
             date.confirmed = True;
@@ -242,18 +247,31 @@ class MainPage(webapp2.RequestHandler):
             date = db.get(unconfirm)
             date.confirmed = False;
             date.put()
+        if accept:
+            date = db.get(accept)
+            date.willAttend.append(thisContact.key())
+            date.put()
+        if cancel:
+            date = db.get(cancel)
+            date.willAttend.remove(thisContact.key())
+            date.put()
         eventdatestates = return_all_contact_and_contacts_eventdatestates(self)
-        thisContact = return_current_contact(self)
         for eventdatestate in eventdatestates:
             name = str(eventdatestate.date.key()) + '_available'
             value = self.request.get(name)
-            if value == 'available' and not (thisContact.key() in eventdatestate.date.couldAttend):
-                eventdatestate.date.couldAttend.append(thisContact.key())
+            if value == 'available' and not (thisContact.key() in eventdatestate.date.canAttend):
+                logging.info('!!!!!!!!!!!!!' + name + ' is now available ' + value)
+                eventdatestate.date.canAttend.append(thisContact.key())
+                if thisContact.key() in eventdatestate.date.cannotAttend:
+                    eventdatestate.date.cannotAttend.remove(thisContact.key())
                 eventdatestate.date.put()
-            elif value != 'available' and (thisContact.key() in eventdatestate.date.couldAttend):
-                eventdatestate.date.couldAttend.remove(thisContact.key())
+            elif value == 'unavailable' and not (thisContact.key() in eventdatestate.date.cannotAttend):
+                logging.info('!!!!!!!!!!!!!' + name + ' is now unnavailable ' + value)
+                eventdatestate.date.cannotAttend.append(thisContact.key())
+                if thisContact.key() in eventdatestate.date.canAttend:
+                    eventdatestate.date.canAttend.remove(thisContact.key())
                 eventdatestate.date.put()
-            logging.info(name + ' = ' + value)
+            
         self.redirect("/")
         
 class LoginPage(webapp2.RequestHandler):
@@ -335,6 +353,7 @@ class AddEventPage(webapp2.RequestHandler):
         title = self.request.get('title')
         description = self.request.get('description')
         invitation = self.request.get('invitation')
+        ticket = self.request.get('ticket')
         newdate = self.request.get('newdate')
         addnewdate = self.request.get('addnewdate')
         deletethisdate = self.request.get('deletethisdate')
@@ -349,6 +368,7 @@ class AddEventPage(webapp2.RequestHandler):
         event.title = title.strip()
         event.description = description.strip()
         event.invitation = invitation.strip()
+        event.ticket = ticket.strip()
         event.put()
         if newdate:
             date = Date(parent=event)

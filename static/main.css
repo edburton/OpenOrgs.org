@@ -138,8 +138,14 @@ label {
 	font-size: 15px;
 }
 
-label.capacity {
-	display: inline-block;
+/*
+ label.capacity {
+ display: inline-block;
+ }
+ */
+
+.capacity {
+	display: none; /*inline-block;*/
 }
 
 div.box .field {
@@ -281,18 +287,14 @@ ul.inline_functions, li.inline_functions, button.inline_functions, label.inline_
 	padding: 1px 4px 1px 4px;
 }
 
-.invitation {
-	background-color: orange;
+.red {
+	background-color: red;
 }
 
-.ticket {
+.green {
 	background-color: green;
 }
 
-.unconfirmed {
+.orange {
 	background-color: orange;
-}
-
-.confirmed {
-	background-color: green;
 }
