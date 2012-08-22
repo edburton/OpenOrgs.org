@@ -188,9 +188,11 @@ def return_all_contact_and_contacts_eventdatestates(self):
                 dates = que.fetch(limit=None)
                 for date in dates:
                     state = DateState.unconfirmed
+                    alert = 'orange'
                     if date.confirmed:
                         state = DateState.confirmed
-                    eventdatestate = EventDateState(event, date, state, 'orange')
+                        alert = 'green'
+                    eventdatestate = EventDateState(event, date, state, '', alert)
                     eventdatestates.append(eventdatestate)           
         if contact.confirmedContacts:
             for confirmedContact in contact.confirmedContacts:
