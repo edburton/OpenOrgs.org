@@ -11,9 +11,9 @@
 		<label for="ticket">Ticket</label>
 		<textarea class="field" name="ticket" id="ticket" >{% if event %}{{ event.ticket }}{% endif %}</textarea>
 		<label for="minCapacity" class="capacity">Capacity from</label>
-		<input type="text" class="capacity" name="minCapacity" id="minCapacity" maxlength="3" size="3"/ value="" >
+		<input type="text" class="capacity" name="minCapacity" id="minCapacity" maxlength="3" size="3"/ value="{% if event and event.minCapacity > 0 %}{{ event.minCapacity }}{% endif %}" >
 		<label for="maxCapacity" class="capacity">to</label>
-		<input type="text" name="maxCapacity" id="maxCapacity" class="capacity" maxlength="3" size="3"/ value="" >
+		<input type="text" name="maxCapacity" id="maxCapacity" class="capacity" maxlength="3" size="3"/ value="{% if event and event.maxCapacity > 0 %}{{ event.maxCapacity }}{% endif %}" >
 		<br>
 		<br>
 		<div class="datelist">
@@ -50,11 +50,11 @@
 		var frmvalidator = new Validator("myform");
 		frmvalidator.EnableMsgsTogether();
 		frmvalidator.addValidation("title", "req", "Enter an Event Title");
-		frmvalidator.addValidation("minCapacity", "numeric", "Enter a number for the Minimum Capacity (or leave it blank)");
-		frmvalidator.addValidation("maxCapacity", "numeric", "Enter a number for the Maximum Capacity (or leave it blank)");
-		frmvalidator.addValidation("minCapacity", "gt=0", "The Minimum Capacity must be greater than 0 (or leave it blank)");
-		frmvalidator.addValidation("maxCapacity", "gt=0", "The Maximum Capacity must be greater than 0 (or leave it blank)");
-		frmvalidator.addValidation("minCapacity", "leelmnt=maxCapacity", "The Minimum Capacity must be less than the Maximum Capacity");
+		frmvalidator.addValidation("minCapacity", "numeric", "Enter a number for the Minimum Capacity (or leave it empty)");
+		frmvalidator.addValidation("maxCapacity", "numeric", "Enter a number for the Maximum Capacity (or leave it empty)");
+		frmvalidator.addValidation("minCapacity", "gt=-1", "The Minimum Capacity cannot be a negative number");
+		frmvalidator.addValidation("maxCapacity", "gt=-1", "The Maximum Capacity cannot be a negative number");
+		frmvalidator.addValidation("minCapacity", "leelmnt=maxCapacity", "The Minimum Capacity must be less than the Maximum Capacity (or leave one empty)");
 	</script>
 </div>
 {% endblock %}

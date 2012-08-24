@@ -62,6 +62,24 @@
 						</button>
 					</li>
 				</ul> </span>{% endif %}
+			{% if eventdatestate.state == "fully booked" %}
+			<span class="inline_functions">
+				<ul class="inline_functions">
+					<li class="inline_functions">
+						<button class="inline_functions" type="submit" name="joinwaitinglist" value="{{ eventdatestate.date.key }}">
+							Join waiting list
+						</button>
+					</li>
+				</ul> </span>{% endif %}
+			{% if eventdatestate.state == "waiting list" %}
+			<span class="inline_functions">
+				<ul class="inline_functions">
+					<li class="inline_functions">
+						<button class="inline_functions" type="submit" name="leavewaitinglist" value="{{ eventdatestate.date.key }}">
+							Leave waiting list
+						</button>
+					</li>
+				</ul> </span>{% endif %}
 			{% if eventdatestate.state == "unconfirmed" %}
 			<span class="inline_functions">
 				<ul class="inline_functions">
@@ -73,6 +91,7 @@
 				</ul> </span>{% endif %} <span class="badge leftbadge {{ eventdatestate.state }}  {{ eventdatestate.alert }}">{{ eventdatestate.state }}</span>
 			{{ eventdatestate.date.date }}
 			<span class="note">{{ eventdatestate.event.title }}</span>
+			{% if eventdatestate.count %} <span class="attendance">({{ eventdatestate.count }})</span>{% endif %}
 		</div>
 	</div>
 	{% endfor %}

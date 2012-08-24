@@ -7,7 +7,6 @@ import os
 import logging
 import time
 import calendar
-import pickle
 
 from google.appengine.ext import db
 from google.appengine.api import users
@@ -39,16 +38,9 @@ class Date(db.Model):
     cannotAttend = db.ListProperty(db.Key)
     canAttend = db.ListProperty(db.Key)
     willAttend = db.ListProperty(db.Key)
-
-class Dictionary(db.Model):
-    entries = db.ListProperty(db.Key)
+    waitingList = db.ListProperty(db.Key)
     
-class DictionaryEntry(db.Model):
-    name = db.StringProperty();
-    value = db.TextProperty()
-    
-    
-################CONTROLLER########################### 
+################HELPER CLASSES########################### 
 
 
 class EventDates:
@@ -57,21 +49,24 @@ class EventDates:
         self.dates = dates
         
 class EventDateState:
-    def __init__(self, event, date, state, available='unknown', alert='orange'):
+    def __init__(self, event, date, state, available='unknown', alert='orange', count=''):
         self.event = event
         self.date = date
         self.state = state
         self.available = available
         self.alert = alert
+        self.count = count
         
 class DateState:
     suggestion = 'suggestion'
     invitation = 'invitation'
     ticket = 'ticket'
+    full = 'fully booked'
+    waiting = 'waiting list'
     unconfirmed = 'unconfirmed'
     confirmed = 'confirmed'
     
-
+################CONTROLLER########################### 
 
 class BaseHandler(webapp2.RequestHandler):
     def dispatch(self):
@@ -189,10 +184,16 @@ def return_all_contact_and_contacts_eventdatestates(self):
                 for date in dates:
                     state = DateState.unconfirmed
                     alert = 'orange'
+                    count = ''
                     if date.confirmed:
                         state = DateState.confirmed
                         alert = 'green'
-                    eventdatestate = EventDateState(event, date, state, '', alert)
+                        if event.maxCapacity > 0:
+                            count = str(len(date.willAttend)) + '/' + str(event.maxCapacity)
+                    else:
+                        if event.minCapacity > 0:
+                            count = str(len(date.canAttend)) + '/' + str(event.minCapacity)
+                    eventdatestate = EventDateState(event, date, state, '', alert, count)
                     eventdatestates.append(eventdatestate)           
         if contact.confirmedContacts:
             for confirmedContact in contact.confirmedContacts:
@@ -206,12 +207,22 @@ def return_all_contact_and_contacts_eventdatestates(self):
                             state = DateState.suggestion
                             available = 'unknown'
                             alert = 'red'
+                            count = ''
                             if date.confirmed:
                                 if contact.key() in date.willAttend:
                                     state = DateState.ticket
                                     alert = 'green'
                                 else:
                                     state = DateState.invitation
+                                if event.maxCapacity > 0:
+                                    count = str(len(date.willAttend)) + '/' + str(event.maxCapacity)
+                                    if len(date.waitingList) > 0:
+                                        count = count + ' + ' + str(len(date.waitingList)) + ' on waiting list'
+                                    if state == DateState.invitation and len(date.willAttend) >= event.maxCapacity:
+                                        if contact.key() in date.waitingList:
+                                            state = DateState.waiting
+                                        else:
+                                            state = DateState.full
                             else:
                                 if contact.key() in date.canAttend:
                                     available = 'available'
@@ -219,12 +230,14 @@ def return_all_contact_and_contacts_eventdatestates(self):
                                 if contact.key() in date.cannotAttend:
                                     available = 'unavailable'
                                     alert = 'orange'
-                            eventdatestates.append(EventDateState(event, date, state, available, alert)) 
+                                if event.minCapacity > 0:
+                                    count = str(len(date.canAttend)) + '/' + str(event.minCapacity)
+                            eventdatestates.append(EventDateState(event, date, state, available, alert, count)) 
     return eventdatestates
         
     
         
-class MainPage(webapp2.RequestHandler):
+class EventPage(webapp2.RequestHandler):
     def get(self):
         template_values = { }
         template_values = dict(template_values.items() + base_dictionary(self).items())
@@ -241,6 +254,8 @@ class MainPage(webapp2.RequestHandler):
         unconfirm = self.request.get('unconfirm')
         accept = self.request.get('accept')
         cancel = self.request.get('cancel')
+        joinwaitinglist = self.request.get('joinwaitinglist')
+        leavewaitinglist = self.request.get('leavewaitinglist')
         if confirm:
             date = db.get(confirm)
             date.confirmed = True;
@@ -252,23 +267,31 @@ class MainPage(webapp2.RequestHandler):
         if accept:
             date = db.get(accept)
             date.willAttend.append(thisContact.key())
+            if thisContact.key() in date.waitingList:
+                date.waitingList.remove(thisContact.key())
             date.put()
         if cancel:
             date = db.get(cancel)
             date.willAttend.remove(thisContact.key())
+            date.put()
+        if joinwaitinglist:
+            date = db.get(joinwaitinglist)
+            date.waitingList.append(thisContact.key())
+            date.put()
+        if leavewaitinglist:
+            date = db.get(leavewaitinglist)
+            date.waitingList.remove(thisContact.key())
             date.put()
         eventdatestates = return_all_contact_and_contacts_eventdatestates(self)
         for eventdatestate in eventdatestates:
             name = str(eventdatestate.date.key()) + '_available'
             value = self.request.get(name)
             if value == 'available' and not (thisContact.key() in eventdatestate.date.canAttend):
-                logging.info('!!!!!!!!!!!!!' + name + ' is now available ' + value)
                 eventdatestate.date.canAttend.append(thisContact.key())
                 if thisContact.key() in eventdatestate.date.cannotAttend:
                     eventdatestate.date.cannotAttend.remove(thisContact.key())
                 eventdatestate.date.put()
             elif value == 'unavailable' and not (thisContact.key() in eventdatestate.date.cannotAttend):
-                logging.info('!!!!!!!!!!!!!' + name + ' is now unnavailable ' + value)
                 eventdatestate.date.cannotAttend.append(thisContact.key())
                 if thisContact.key() in eventdatestate.date.canAttend:
                     eventdatestate.date.canAttend.remove(thisContact.key())
@@ -356,6 +379,8 @@ class AddEventPage(webapp2.RequestHandler):
         description = self.request.get('description')
         invitation = self.request.get('invitation')
         ticket = self.request.get('ticket')
+        minCapacity = self.request.get('minCapacity')
+        maxCapacity = self.request.get('maxCapacity')
         newdate = self.request.get('newdate')
         addnewdate = self.request.get('addnewdate')
         deletethisdate = self.request.get('deletethisdate')
@@ -371,6 +396,14 @@ class AddEventPage(webapp2.RequestHandler):
         event.description = description.strip()
         event.invitation = invitation.strip()
         event.ticket = ticket.strip()
+        if minCapacity.isdigit():
+            event.minCapacity = int(minCapacity)
+        else:
+            event.minCapacity = 0
+        if maxCapacity.isdigit():
+            event.maxCapacity = int(maxCapacity)
+        else:
+            event.maxCapacity = 0
         event.put()
         if newdate:
             date = Date(parent=event)
@@ -435,6 +468,50 @@ class ContactsPage(webapp2.RequestHandler):
             thisContact = return_current_contact(self)
             thatContact = db.get(remove)
             if  thatContact.key() in thisContact.confirmedContacts and thisContact.key() in thatContact.confirmedContacts:
+                events = return_events_for_contact(self, thatContact.key())
+                if events:
+                    for event in events:
+                        que = db.Query(Date)
+                        que.ancestor(event.key())
+                        dates = que.fetch(limit=None)
+                        for date in dates:
+                            update = False
+                            if thisContact.key() in date.cannotAttend:
+                                date.cannotAttend.remove(thisContact.key())
+                                update = True;
+                            if thisContact.key() in date.canAttend:
+                                date.canAttend.remove(thisContact.key())
+                                update = True;
+                            if thisContact.key() in date.willAttend:
+                                date.willAttend.remove(thisContact.key())
+                                update = True;
+                            if thisContact.key() in date.waitingList:
+                                date.waitingList.remove(thisContact.key())
+                                update = True;
+                            if update:
+                                date.put()
+                events = return_events_for_contact(self, thisContact.key())
+                if events:
+                    for event in events:
+                        que = db.Query(Date)
+                        que.ancestor(event.key())
+                        dates = que.fetch(limit=None)
+                        for date in dates:
+                            update = False
+                            if thatContact.key() in date.cannotAttend:
+                                date.cannotAttend.remove(thatContact.key())
+                                update = True;
+                            if thatContact.key() in date.canAttend:
+                                date.canAttend.remove(thatContact.key())
+                                update = True;
+                            if thatContact.key() in date.willAttend:
+                                date.willAttend.remove(thatContact.key())
+                                update = True;
+                            if thatContact.key() in date.waitingList:
+                                date.waitingList.remove(thatContact.key())
+                                update = True;
+                            if update:
+                                date.put()
                 thisContact.confirmedContacts.remove(thatContact.key())
                 thatContact.confirmedContacts.remove(thisContact.key())
                 thisContact.put();
@@ -489,7 +566,7 @@ config['webapp2_extras.sessions'] = {
     'secret_key': 'OpenOrgs',
 }
 
-routes = [('/', MainPage),
+routes = [('/', EventPage),
                                ('/login', LoginPage),
                                ('/admin', AdminPage),
                                ('/events/manage', ManageEventsPage),
